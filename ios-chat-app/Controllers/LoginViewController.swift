@@ -76,7 +76,6 @@ class LoginViewController: UIViewController {
                                                             action:#selector(registerButtonTapped))
         
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
-        
         emailField.delegate = self
         passwordField.delegate = self
         
@@ -106,10 +105,16 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func loginButtonTapped() {
-        guard let email = emailField.text, let password = passwordField.text, !email.isEmpty, !password.isEmpty else {
-            alertUserLoginError()
-            return
-        }
+        guard let email = emailField.text,
+              let password = passwordField.text,
+              !email.isEmpty,
+              !password.isEmpty else {
+                  alertUserLoginError()
+                  return
+              }
+        
+        //        emailField.resignFirstResponder()
+        //        passwordField.resignFirstResponder()
         
         // Firebase login
     }
@@ -122,7 +127,7 @@ class LoginViewController: UIViewController {
     
 }
 
-// MARK: - LoginView Extension
+// MARK: - LoginViewController Extension
 extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
