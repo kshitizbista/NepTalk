@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		06BEB5EF961F68C8D198B23C /* Pods_NepTalk_NepTalkUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5960B54BFC57FB93EBD2BCCF /* Pods_NepTalk_NepTalkUITests.framework */; };
 		11BB6B1A77FE70ED9D361F5A /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22ACFAC355F596D38808B42B /* Pods_NepTalk.framework */; };
+		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
 		39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893E27429258009D9B6E /* SceneDelegate.swift */; };
 		39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7894027429258009D9B6E /* ConversationsViewController.swift */; };
@@ -22,7 +23,6 @@
 		39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897A274299C8009D9B6E /* NewConversationViewController.swift */; };
 		39B7897D274299DC009D9B6E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897C274299DC009D9B6E /* ProfileViewController.swift */; };
 		39E294022754200900D57C42 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E294012754200900D57C42 /* Extension.swift */; };
-		39F02EDF2757FB120096DD64 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39F02EDE2757FB120096DD64 /* GoogleService-Info.plist */; };
 		93A64B462D8D28E5FD699471 /* Pods_NepTalkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1392AC6E8B009217DF2F90CC /* Pods_NepTalkTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -47,6 +47,7 @@
 		00AE7B9D51FAF14557105CC3 /* Pods-NepTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk.release.xcconfig"; path = "Target Support Files/Pods-NepTalk/Pods-NepTalk.release.xcconfig"; sourceTree = "<group>"; };
 		1392AC6E8B009217DF2F90CC /* Pods_NepTalkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22ACFAC355F596D38808B42B /* Pods_NepTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		39920D6C275810E90066EA77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39B7893C27429258009D9B6E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		39B7893E27429258009D9B6E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -64,7 +65,6 @@
 		39B7897A274299C8009D9B6E /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		39B7897C274299DC009D9B6E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		39E294012754200900D57C42 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		39F02EDE2757FB120096DD64 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "../../Downloads/GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3B18D63CAD77CF2727D167D7 /* Pods-NepTalkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalkTests.release.xcconfig"; path = "Target Support Files/Pods-NepTalkTests/Pods-NepTalkTests.release.xcconfig"; sourceTree = "<group>"; };
 		5960B54BFC57FB93EBD2BCCF /* Pods_NepTalk_NepTalkUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalk_NepTalkUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		634DCFE47996E3CA44B47BC6 /* Pods-NepTalk-NepTalkUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk-NepTalkUITests.release.xcconfig"; path = "Target Support Files/Pods-NepTalk-NepTalkUITests/Pods-NepTalk-NepTalkUITests.release.xcconfig"; sourceTree = "<group>"; };
@@ -130,7 +130,7 @@
 				39B7896D27429719009D9B6E /* Views */,
 				39B7896C2742970E009D9B6E /* Controllers */,
 				39B7894A27429259009D9B6E /* Info.plist */,
-				39F02EDE2757FB120096DD64 /* GoogleService-Info.plist */,
+				39920D6C275810E90066EA77 /* GoogleService-Info.plist */,
 			);
 			path = NepTalk;
 			sourceTree = "<group>";
@@ -333,7 +333,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39B7894927429259009D9B6E /* LaunchScreen.storyboard in Resources */,
-				39F02EDF2757FB120096DD64 /* GoogleService-Info.plist in Resources */,
+				39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */,
 				39B7894627429259009D9B6E /* Assets.xcassets in Resources */,
 				39B7894427429258009D9B6E /* Main.storyboard in Resources */,
 			);
