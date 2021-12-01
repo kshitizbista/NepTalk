@@ -13,9 +13,6 @@
 		39B7894427429258009D9B6E /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B7894227429258009D9B6E /* Main.storyboard */; };
 		39B7894627429259009D9B6E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 39B7894527429259009D9B6E /* Assets.xcassets */; };
 		39B7894927429259009D9B6E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 39B7894727429259009D9B6E /* LaunchScreen.storyboard */; };
-		39B7895427429259009D9B6E /* ios_chat_appTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7895327429259009D9B6E /* ios_chat_appTests.swift */; };
-		39B7895E27429259009D9B6E /* ios_chat_appUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7895D27429259009D9B6E /* ios_chat_appUITests.swift */; };
-		39B7896027429259009D9B6E /* ios_chat_appUITestsLaunchTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7895F27429259009D9B6E /* ios_chat_appUITestsLaunchTests.swift */; };
 		39B789732742994C009D9B6E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B789722742994C009D9B6E /* LoginViewController.swift */; };
 		39B7897527429962009D9B6E /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897427429962009D9B6E /* RegisterViewController.swift */; };
 		39B78977274299A0009D9B6E /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B78976274299A0009D9B6E /* PhotoViewerViewController.swift */; };
@@ -43,7 +40,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		39B7893927429258009D9B6E /* ios-chat-app.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "ios-chat-app.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39B7893C27429258009D9B6E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		39B7893E27429258009D9B6E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		39B7894027429258009D9B6E /* ConversationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationsViewController.swift; sourceTree = "<group>"; };
@@ -51,11 +48,8 @@
 		39B7894527429259009D9B6E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		39B7894827429259009D9B6E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		39B7894A27429259009D9B6E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		39B7894F27429259009D9B6E /* ios-chat-appTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-chat-appTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		39B7895327429259009D9B6E /* ios_chat_appTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_chat_appTests.swift; sourceTree = "<group>"; };
-		39B7895927429259009D9B6E /* ios-chat-appUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "ios-chat-appUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		39B7895D27429259009D9B6E /* ios_chat_appUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_chat_appUITests.swift; sourceTree = "<group>"; };
-		39B7895F27429259009D9B6E /* ios_chat_appUITestsLaunchTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ios_chat_appUITestsLaunchTests.swift; sourceTree = "<group>"; };
+		39B7894F27429259009D9B6E /* NepTalkTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NepTalkTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		39B7895927429259009D9B6E /* NepTalkUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = NepTalkUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		39B789722742994C009D9B6E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		39B7897427429962009D9B6E /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		39B78976274299A0009D9B6E /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
@@ -93,9 +87,7 @@
 		39B7893027429258009D9B6E = {
 			isa = PBXGroup;
 			children = (
-				39B7893B27429258009D9B6E /* ios-chat-app */,
-				39B7895227429259009D9B6E /* ios-chat-appTests */,
-				39B7895C27429259009D9B6E /* ios-chat-appUITests */,
+				39B7893B27429258009D9B6E /* NepTalk */,
 				39B7893A27429258009D9B6E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -103,14 +95,14 @@
 		39B7893A27429258009D9B6E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				39B7893927429258009D9B6E /* ios-chat-app.app */,
-				39B7894F27429259009D9B6E /* ios-chat-appTests.xctest */,
-				39B7895927429259009D9B6E /* ios-chat-appUITests.xctest */,
+				39B7893927429258009D9B6E /* NepTalk.app */,
+				39B7894F27429259009D9B6E /* NepTalkTests.xctest */,
+				39B7895927429259009D9B6E /* NepTalkUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
 		};
-		39B7893B27429258009D9B6E /* ios-chat-app */ = {
+		39B7893B27429258009D9B6E /* NepTalk */ = {
 			isa = PBXGroup;
 			children = (
 				39B789702742972F009D9B6E /* Resources */,
@@ -120,32 +112,14 @@
 				39B7896C2742970E009D9B6E /* Controllers */,
 				39B7894A27429259009D9B6E /* Info.plist */,
 			);
-			path = "ios-chat-app";
-			sourceTree = "<group>";
-		};
-		39B7895227429259009D9B6E /* ios-chat-appTests */ = {
-			isa = PBXGroup;
-			children = (
-				39B7895327429259009D9B6E /* ios_chat_appTests.swift */,
-			);
-			path = "ios-chat-appTests";
-			sourceTree = "<group>";
-		};
-		39B7895C27429259009D9B6E /* ios-chat-appUITests */ = {
-			isa = PBXGroup;
-			children = (
-				39B7895D27429259009D9B6E /* ios_chat_appUITests.swift */,
-				39B7895F27429259009D9B6E /* ios_chat_appUITestsLaunchTests.swift */,
-			);
-			path = "ios-chat-appUITests";
+			path = NepTalk;
 			sourceTree = "<group>";
 		};
 		39B7896C2742970E009D9B6E /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
 				39B7894027429258009D9B6E /* ConversationsViewController.swift */,
-				39B789722742994C009D9B6E /* LoginViewController.swift */,
-				39B7897427429962009D9B6E /* RegisterViewController.swift */,
+				39C9C7762757F58B00EBE0A9 /* Login */,
 				39B78976274299A0009D9B6E /* PhotoViewerViewController.swift */,
 				39B78978274299B4009D9B6E /* VideoPlayerViewController.swift */,
 				39B7897A274299C8009D9B6E /* NewConversationViewController.swift */,
@@ -196,12 +170,21 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
+		39C9C7762757F58B00EBE0A9 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				39B789722742994C009D9B6E /* LoginViewController.swift */,
+				39B7897427429962009D9B6E /* RegisterViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		39B7893827429258009D9B6E /* ios-chat-app */ = {
+		39B7893827429258009D9B6E /* NepTalk */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 39B7896327429259009D9B6E /* Build configuration list for PBXNativeTarget "ios-chat-app" */;
+			buildConfigurationList = 39B7896327429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalk" */;
 			buildPhases = (
 				39B7893527429258009D9B6E /* Sources */,
 				39B7893627429258009D9B6E /* Frameworks */,
@@ -211,14 +194,14 @@
 			);
 			dependencies = (
 			);
-			name = "ios-chat-app";
+			name = NepTalk;
 			productName = "ios-chat-app";
-			productReference = 39B7893927429258009D9B6E /* ios-chat-app.app */;
+			productReference = 39B7893927429258009D9B6E /* NepTalk.app */;
 			productType = "com.apple.product-type.application";
 		};
-		39B7894E27429259009D9B6E /* ios-chat-appTests */ = {
+		39B7894E27429259009D9B6E /* NepTalkTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 39B7896627429259009D9B6E /* Build configuration list for PBXNativeTarget "ios-chat-appTests" */;
+			buildConfigurationList = 39B7896627429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalkTests" */;
 			buildPhases = (
 				39B7894B27429259009D9B6E /* Sources */,
 				39B7894C27429259009D9B6E /* Frameworks */,
@@ -229,14 +212,14 @@
 			dependencies = (
 				39B7895127429259009D9B6E /* PBXTargetDependency */,
 			);
-			name = "ios-chat-appTests";
+			name = NepTalkTests;
 			productName = "ios-chat-appTests";
-			productReference = 39B7894F27429259009D9B6E /* ios-chat-appTests.xctest */;
+			productReference = 39B7894F27429259009D9B6E /* NepTalkTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		39B7895827429259009D9B6E /* ios-chat-appUITests */ = {
+		39B7895827429259009D9B6E /* NepTalkUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 39B7896927429259009D9B6E /* Build configuration list for PBXNativeTarget "ios-chat-appUITests" */;
+			buildConfigurationList = 39B7896927429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalkUITests" */;
 			buildPhases = (
 				39B7895527429259009D9B6E /* Sources */,
 				39B7895627429259009D9B6E /* Frameworks */,
@@ -247,9 +230,9 @@
 			dependencies = (
 				39B7895B27429259009D9B6E /* PBXTargetDependency */,
 			);
-			name = "ios-chat-appUITests";
+			name = NepTalkUITests;
 			productName = "ios-chat-appUITests";
-			productReference = 39B7895927429259009D9B6E /* ios-chat-appUITests.xctest */;
+			productReference = 39B7895927429259009D9B6E /* NepTalkUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -267,6 +250,7 @@
 					};
 					39B7894E27429259009D9B6E = {
 						CreatedOnToolsVersion = 13.1;
+						LastSwiftMigration = 1310;
 						TestTargetID = 39B7893827429258009D9B6E;
 					};
 					39B7895827429259009D9B6E = {
@@ -275,7 +259,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 39B7893427429258009D9B6E /* Build configuration list for PBXProject "ios-chat-app" */;
+			buildConfigurationList = 39B7893427429258009D9B6E /* Build configuration list for PBXProject "NepTalk" */;
 			compatibilityVersion = "Xcode 13.0";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -288,9 +272,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				39B7893827429258009D9B6E /* ios-chat-app */,
-				39B7894E27429259009D9B6E /* ios-chat-appTests */,
-				39B7895827429259009D9B6E /* ios-chat-appUITests */,
+				39B7893827429258009D9B6E /* NepTalk */,
+				39B7894E27429259009D9B6E /* NepTalkTests */,
+				39B7895827429259009D9B6E /* NepTalkUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -344,7 +328,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39B7895427429259009D9B6E /* ios_chat_appTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -352,8 +335,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				39B7896027429259009D9B6E /* ios_chat_appUITestsLaunchTests.swift in Sources */,
-				39B7895E27429259009D9B6E /* ios_chat_appUITests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -362,12 +343,12 @@
 /* Begin PBXTargetDependency section */
 		39B7895127429259009D9B6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 39B7893827429258009D9B6E /* ios-chat-app */;
+			target = 39B7893827429258009D9B6E /* NepTalk */;
 			targetProxy = 39B7895027429259009D9B6E /* PBXContainerItemProxy */;
 		};
 		39B7895B27429259009D9B6E /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 39B7893827429258009D9B6E /* ios-chat-app */;
+			target = 39B7893827429258009D9B6E /* NepTalk */;
 			targetProxy = 39B7895A27429259009D9B6E /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -517,7 +498,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PV48483GG2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ios-chat-app/Info.plist";
+				INFOPLIST_FILE = NepTalk/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -529,7 +510,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.study.ios-chat-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.study.NepTalk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -546,7 +527,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PV48483GG2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = "ios-chat-app/Info.plist";
+				INFOPLIST_FILE = NepTalk/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -558,7 +539,7 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.study.ios-chat-app";
+				PRODUCT_BUNDLE_IDENTIFIER = com.study.NepTalk;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -571,6 +552,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PV48483GG2;
@@ -582,12 +564,14 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.study.ios-chat-appTests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.study.NepTalkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "NepTalkTests-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-chat-app.app/ios-chat-app";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NepTalk.app/NepTalk";
 			};
 			name = Debug;
 		};
@@ -596,6 +580,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = PV48483GG2;
@@ -607,12 +592,13 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.study.ios-chat-appTests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.study.NepTalkTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OBJC_BRIDGING_HEADER = "NepTalkTests-Bridging-Header.h";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/ios-chat-app.app/ios-chat-app";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NepTalk.app/NepTalk";
 			};
 			name = Release;
 		};
@@ -630,12 +616,12 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.study.ios-chat-appUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.study.NepTalkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "ios-chat-app";
+				TEST_TARGET_NAME = NepTalk;
 			};
 			name = Debug;
 		};
@@ -653,19 +639,19 @@
 					"@loader_path/Frameworks",
 				);
 				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = "com.study.ios-chat-appUITests";
+				PRODUCT_BUNDLE_IDENTIFIER = com.study.NepTalkUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_TARGET_NAME = "ios-chat-app";
+				TEST_TARGET_NAME = NepTalk;
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		39B7893427429258009D9B6E /* Build configuration list for PBXProject "ios-chat-app" */ = {
+		39B7893427429258009D9B6E /* Build configuration list for PBXProject "NepTalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				39B7896127429259009D9B6E /* Debug */,
@@ -674,7 +660,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		39B7896327429259009D9B6E /* Build configuration list for PBXNativeTarget "ios-chat-app" */ = {
+		39B7896327429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalk" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				39B7896427429259009D9B6E /* Debug */,
@@ -683,7 +669,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		39B7896627429259009D9B6E /* Build configuration list for PBXNativeTarget "ios-chat-appTests" */ = {
+		39B7896627429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalkTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				39B7896727429259009D9B6E /* Debug */,
@@ -692,7 +678,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		39B7896927429259009D9B6E /* Build configuration list for PBXNativeTarget "ios-chat-appUITests" */ = {
+		39B7896927429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalkUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				39B7896A27429259009D9B6E /* Debug */,
