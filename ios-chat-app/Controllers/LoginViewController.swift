@@ -105,6 +105,10 @@ class LoginViewController: UIViewController {
     }
     
     @objc private func loginButtonTapped() {
+        
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
+        
         guard let email = emailField.text,
               let password = passwordField.text,
               !email.isEmpty,
@@ -112,9 +116,6 @@ class LoginViewController: UIViewController {
                   alertUserLoginError()
                   return
               }
-        
-        //        emailField.resignFirstResponder()
-        //        passwordField.resignFirstResponder()
         
         // Firebase login
     }

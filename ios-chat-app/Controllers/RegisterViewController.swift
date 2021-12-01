@@ -20,6 +20,9 @@ class RegisterViewController: UIViewController {
         imageView.image = UIImage(systemName: "person")
         imageView.tintColor = UIColor(named: "brand-blue")
         imageView.contentMode = .scaleAspectFit
+        imageView.layer.masksToBounds = true
+        imageView.layer.borderWidth = 2
+        imageView.layer.borderColor = UIColor.lightGray.cgColor
         return imageView
     }()
     
@@ -120,7 +123,7 @@ class RegisterViewController: UIViewController {
         scrollView.addSubview(emailField)
         scrollView.addSubview(passwordField)
         scrollView.addSubview(registerButton)
-       
+        
         
         imageView.isUserInteractionEnabled = true
         
@@ -131,7 +134,7 @@ class RegisterViewController: UIViewController {
     }
     
     @objc func didTapChangeProfilePicture() {
-        print("touch")
+        presentPhotoActionSheet()
     }
     
     override func viewDidLayoutSubviews() {
@@ -140,6 +143,7 @@ class RegisterViewController: UIViewController {
         
         let size = scrollView.width/3
         imageView.frame = CGRect(x: (scrollView.width-size)/2, y: 20, width: size, height: size)
+        imageView.layer.cornerRadius = imageView.width / 2
         firstNameField.frame = CGRect(x: 30, y: imageView.bottom + 10, width: scrollView.width - 60, height: 52)
         lastNameField.frame = CGRect(x: 30, y: firstNameField.bottom + 10, width: scrollView.width - 60, height: 52)
         emailField.frame = CGRect(x: 30, y: lastNameField.bottom + 10, width: scrollView.width - 60, height: 52)
@@ -154,12 +158,11 @@ class RegisterViewController: UIViewController {
     //    }
     
     @objc private func registerButtonTapped() {
-        //        firstNameField.resignFirstResponder()
-        //        lastNameField.resignFirstResponder()
-        //        emailField.resignFirstResponder()
-        //        passwordField.resignFirstResponder()
+        firstNameField.resignFirstResponder()
+        lastNameField.resignFirstResponder()
+        emailField.resignFirstResponder()
+        passwordField.resignFirstResponder()
         
-
         guard let firstName = firstNameField.text,
               let lastName = lastNameField.text,
               let email = emailField.text,
@@ -182,7 +185,7 @@ class RegisterViewController: UIViewController {
     
 }
 
-// MARK: - RegisterViewController Extension
+// MARK: - RegisterView TextField Delegate Extension
 extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -196,5 +199,58 @@ extension RegisterViewController: UITextFieldDelegate {
             registerButtonTapped()
         }
         return true
+    }
+}
+
+// MARK: - RegisterView ImagePicker Delegate Extension
+extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    
+    func presentPhotoActionSheet() {
+        let actionSheet = UIAlertController(title: "How would you like to select a picture",
+                                            message: "",
+                                            preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Cancel",
+                                            style: .cancel,
+                                            handler: nil))
+        actionSheet.addAction(UIAlertAction(title: "Take Phtoto",
+                                            style: .default,
+                                            handler: { [weak self]_ in
+            self?.presentCamera()
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Choose Photo",
+                                            style: .default,
+                                            handler: { [weak self]_ in
+            self?.presentPhotoPicker()
+        }))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    func presentCamera() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .camera
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+    
+    func presentPhotoPicker() {
+        let vc = UIImagePickerController()
+        vc.sourceType = .photoLibrary
+        vc.delegate = self
+        vc.allowsEditing = true
+        present(vc, animated: true)
+    }
+    
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
+        picker.dismiss(animated: true, completion: nil)
+        guard let selectedImage = info[UIImagePickerController.InfoKey.editedImage] as? UIImage else {
+            return
+        }
+        self.imageView.image = selectedImage
+    }
+    
+    func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
+        picker.dismiss(animated: true, completion: nil)
     }
 }
