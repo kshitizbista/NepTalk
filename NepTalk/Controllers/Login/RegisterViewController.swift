@@ -177,20 +177,27 @@ class RegisterViewController: UIViewController {
               }
         
         // Firebase login
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            guard let self = self else {return}
-            guard let result = authResult, error == nil else {
-                print(error!.localizedDescription)
+        DatabaseManager.shared.userExists(with: email.lowercased()) { [weak self] exists in
+            guard let self = self else {
                 return
             }
-            let user = result.user
-            print("Created User: \(user)")
-            self.navigationController?.dismiss(animated: true, completion: nil)
+            if !exists {
+                Auth.auth().createUser(withEmail: email.lowercased(), password: password) {  authResult, error in
+                    guard let result = authResult, error == nil else {
+                        print(error!.localizedDescription)
+                        return
+                    }
+                    DatabaseManager.shared.insertUser(with: User(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
+                    self.navigationController?.dismiss(animated: true, completion: nil)
+                }
+            } else {
+                self.alertUserLoginError(message: "User account for that email address already exists")
+            }
         }
     }
     
-    func alertUserLoginError()  {
-        let alert = UIAlertController(title: "Login Error", message: "Please enter all informstiom to create a new account in.", preferredStyle: .alert)
+    func alertUserLoginError(message: String = "Please enter all informstiom to create a new account in")  {
+        let alert = UIAlertController(title: "Login Error", message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
