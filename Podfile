@@ -7,7 +7,7 @@ target 'NepTalk' do
   
   # Pods for NepTalk
   pod 'Firebase/Auth'
-  pod 'Firebase/Firestore'
+  pod 'Firebase/Database'
   
   target 'NepTalkTests' do
     inherit! :search_paths
