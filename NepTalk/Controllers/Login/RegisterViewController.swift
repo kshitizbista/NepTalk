@@ -231,7 +231,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
         actionSheet.addAction(UIAlertAction(title: "Cancel",
                                             style: .cancel,
                                             handler: nil))
-        actionSheet.addAction(UIAlertAction(title: "Take Phtoto",
+        actionSheet.addAction(UIAlertAction(title: "Take Photo",
                                             style: .default,
                                             handler: { [weak self]_ in
             self?.presentCamera()
