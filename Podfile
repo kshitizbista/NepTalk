@@ -6,8 +6,13 @@ target 'NepTalk' do
   use_frameworks!
   
   # Pods for NepTalk
+  
+  # Firebase
   pod 'Firebase/Auth'
   pod 'Firebase/Database'
+  
+  #Facebook
+  pod 'FBSDKLoginKit'
   
   target 'NepTalkTests' do
     inherit! :search_paths

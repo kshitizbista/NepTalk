@@ -7,6 +7,7 @@
 
 import UIKit
 import FirebaseAuth
+import FBSDKLoginKit
 
 class ProfileViewController: UIViewController {
     
@@ -55,6 +56,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
                 print("Failed to log out")
                 print(error)
             }
+            FBSDKLoginKit.LoginManager().logOut()
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(actionSheet, animated: true)
