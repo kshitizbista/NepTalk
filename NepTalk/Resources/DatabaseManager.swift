@@ -20,12 +20,11 @@ final class DatabaseManager {
 // MARK: - Account Management
 extension DatabaseManager {
     
-    public func getuid() -> String? {
-        return FirebaseAuth.Auth.auth().currentUser?.uid
+    public func getCurrentUser() -> User? {
+        return FirebaseAuth.Auth.auth().currentUser
     }
     
     public func userExists(with email: String, completion: @escaping ((Bool) -> Void)) {
-       
         database.child("users")
             .queryOrdered(byChild: "email")
             .queryEqual(toValue: email)
@@ -40,12 +39,12 @@ extension DatabaseManager {
     }
     
     /// Inserts new user to databse
-    public func insertUser (with user: User) {
+    public func insertUser (with user: AppUser) {
         database.child("users/\(user.uid)").setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email])
     }
 }
 
-struct User {
+struct AppUser {
     let uid: String
     let firstName: String
     let lastName: String
