@@ -6,7 +6,7 @@
 //
 
 import UIKit
-import Firebase
+import FirebaseAuth
 
 class RegisterViewController: UIViewController {
     
@@ -104,13 +104,7 @@ class RegisterViewController: UIViewController {
         title = "Register"
         view.backgroundColor = .white
         
-        //        navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Register",
-        //                                                            style: .done,
-        //                                                            target: self,
-        //                                                            action:#selector(registerButtonTapped))
-        
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
-        
         firstNameField.delegate = self
         lastNameField.delegate = self
         emailField.delegate = self
@@ -152,12 +146,6 @@ class RegisterViewController: UIViewController {
         registerButton.frame = CGRect(x: 30, y: passwordField.bottom + 10, width: scrollView.width - 60, height: 52)
     }
     
-    //    @objc private func registerButtonTapped() {
-    //        let vc = RegisterViewController()
-    //        vc.title = "Create Account"
-    //        navigationController?.pushViewController(vc, animated: true)
-    //    }
-    
     @objc private func registerButtonTapped() {
         firstNameField.resignFirstResponder()
         lastNameField.resignFirstResponder()
@@ -172,7 +160,7 @@ class RegisterViewController: UIViewController {
               !lastName.isEmpty,
               !email.isEmpty,
               !password.isEmpty else {
-                  alertUserLoginError()
+                  alertUserLoginError(message: "Please enter all information to create a new account in")
                   return
               }
         
@@ -184,10 +172,11 @@ class RegisterViewController: UIViewController {
             if !exists {
                 Auth.auth().createUser(withEmail: email.lowercased(), password: password) {  authResult, error in
                     guard let result = authResult, error == nil else {
+                        self.alertUserLoginError(message: "Failed to register user")
                         print(error!.localizedDescription)
                         return
                     }
-                    DatabaseManager.shared.insertUser(with: User(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
+                    DatabaseManager.shared.insertUser(with: AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
                     self.navigationController?.dismiss(animated: true, completion: nil)
                 }
             } else {
@@ -196,15 +185,15 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    func alertUserLoginError(message: String = "Please enter all informstiom to create a new account in")  {
-        let alert = UIAlertController(title: "Login Error", message: message, preferredStyle: .alert)
+    func alertUserLoginError(title: String = "Login Error", message: String = "Ops! Failed to do operation")  {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
     
 }
 
-// MARK: - RegisterView TextField Delegate Extension
+// MARK: - TextField Delegate Extension
 extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -221,7 +210,7 @@ extension RegisterViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - RegisterView ImagePicker Delegate Extension
+// MARK: - ImagePicker Delegate Extension
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func presentPhotoActionSheet() {
