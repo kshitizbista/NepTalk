@@ -656,6 +656,8 @@
 				DEVELOPMENT_TEAM = PV48483GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NepTalk/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow access to select a photo for your profile picture";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow access to select a photo for your profile";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -686,6 +688,8 @@
 				DEVELOPMENT_TEAM = PV48483GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NepTalk/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Please allow access to select a photo for your profile picture";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "Please allow access to select a photo for your profile";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
