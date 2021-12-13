@@ -43,9 +43,7 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         
         let actionSheet = UIAlertController(title: "Do you want to log out ?", message: "", preferredStyle: .actionSheet)
         actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] _ in
-            guard let self = self else {
-                return
-            }
+            guard let self = self else { return }
             do {
                 try FirebaseAuth.Auth.auth().signOut()
                 let vc = LoginViewController()

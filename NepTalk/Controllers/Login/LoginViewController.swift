@@ -8,6 +8,7 @@
 import UIKit
 import Firebase
 import FBSDKLoginKit
+import GoogleSignIn
 
 class LoginViewController: UIViewController {
     
@@ -72,6 +73,11 @@ class LoginViewController: UIViewController {
         return button
     }()
     
+    private let googleLoginButton: GIDSignInButton = {
+        let button = GIDSignInButton()
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Log In"
@@ -83,6 +89,7 @@ class LoginViewController: UIViewController {
                                                             action:#selector(registerButtonTapped))
         
         loginButton.addTarget(self, action: #selector(loginButtonTapped), for: .touchUpInside)
+        googleLoginButton.addTarget(self, action: #selector(googleSignInButtonTapped), for: .touchUpInside)
         emailField.delegate = self
         passwordField.delegate = self
         facebookLoginButton.delegate = self
@@ -94,7 +101,7 @@ class LoginViewController: UIViewController {
         scrollView.addSubview(passwordField)
         scrollView.addSubview(loginButton)
         scrollView.addSubview(facebookLoginButton)
-        
+        scrollView.addSubview(googleLoginButton)
     }
     
     override func viewDidLayoutSubviews() {
@@ -106,7 +113,8 @@ class LoginViewController: UIViewController {
         emailField.frame = CGRect(x: 30, y: imageView.bottom + 10, width: scrollView.width - 60, height: 52)
         passwordField.frame = CGRect(x: 30, y: emailField.bottom + 10, width: scrollView.width - 60, height: 52)
         loginButton.frame = CGRect(x: 30, y: passwordField.bottom + 10, width: scrollView.width - 60, height: 52)
-        facebookLoginButton.frame = CGRect(x: 30, y: loginButton.bottom + 10, width: scrollView.width - 60, height: 28)        
+        googleLoginButton.frame = CGRect(x: 30, y: loginButton.bottom + 10, width: scrollView.width - 60, height: 52)
+        facebookLoginButton.frame = CGRect(x: 30, y: googleLoginButton.bottom + 10, width: scrollView.width - 60, height: 28)
     }
     
     @objc private func registerButtonTapped() {
@@ -130,15 +138,11 @@ class LoginViewController: UIViewController {
         
         // Firebase login
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            guard let self = self else {return}
-            guard let result = authResult, error == nil else {
-                self.alertUserLoginError(message: "Failed to login")
-                print(error!.localizedDescription)
+            guard let self = self else { return }
+            if authResult != nil, let error = error  {
+                self.alertUserLoginError(message: error.localizedDescription)
                 return
             }
-            
-            let user = result.user
-            print("Logged in User: \(user)")
             self.navigationController?.dismiss(animated: true, completion: nil)
         }
     }
@@ -166,30 +170,30 @@ extension LoginViewController: UITextFieldDelegate {
 }
 
 // MARK: - FacebookLoginButton Delegate Extension
-extension LoginViewController : LoginButtonDelegate {
+extension LoginViewController: LoginButtonDelegate {
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
         // no operation
     }
     
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        guard let token = result?.token?.tokenString else {
-            alertUserLoginError(message: "Failed to connect with facebook")
+        guard let token = result?.token?.tokenString, error != nil else {
+            alertUserLoginError(message: error!.localizedDescription)
             return
         }
         
         let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email,first_name, last_name"], tokenString: token, version: nil, httpMethod: .get)
         facebookRequest.start { [weak self] _, fbResult, error in
-            guard let self = self else {return}
+            guard let self = self else { return }
            
             guard let fbResult = fbResult as? [String: Any], error == nil else {
-                self.alertUserLoginError(message: "Failed to connect with facebook")
+                self.alertUserLoginError(message: "Failed to retrieve data from facebook")
                 return
             }
             
             let credential = FacebookAuthProvider.credential(withAccessToken: token)
-            FirebaseAuth.Auth.auth().signIn(with: credential) { authResult, error in
+            Auth.auth().signIn(with: credential) { authResult, error in
                 guard let authResult = authResult , error == nil else {
-                    self.alertUserLoginError(message: "Failed to login with facebook")
+                    self.alertUserLoginError(message: error!.localizedDescription)
                     return
                 }
                 if let email = fbResult["email"] as? String {
@@ -201,7 +205,49 @@ extension LoginViewController : LoginButtonDelegate {
                         }
                     }
                 }
-                print("Successfully logged user in")
+                self.navigationController?.dismiss(animated: true)
+            }
+        }
+    }
+}
+
+// MARK: - GoogleSignIn Handler
+extension LoginViewController {
+    
+    @objc private func googleSignInButtonTapped() {
+        
+        guard let clientID = FirebaseApp.app()?.options.clientID else {return}
+        // Create Google Sign In configuration object.
+        let config = GIDConfiguration(clientID: clientID)
+        
+        // Start the sign in flow!
+        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [weak self] user, error in
+            guard let self = self else { return }
+            if let error = error {
+                self.alertUserLoginError(message: error.localizedDescription)
+                return
+            }
+            
+            guard let authentication = user?.authentication, let idToken = authentication.idToken else {
+                self.alertUserLoginError(message: "Failed to retrieve data from Google")
+                return
+            }
+            
+            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
+            Auth.auth().signIn(with: credential) { authResult, error in
+                guard let authResult = authResult , error == nil else {
+                    self.alertUserLoginError(message: error!.localizedDescription)
+                    return
+                }
+                if let email = user?.profile?.email {
+                    let firstName = user?.profile?.givenName
+                    let lastName = user?.profile?.familyName
+                    DatabaseManager.shared.userExists(with: email) { exists in
+                        if !exists {
+                            DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                        }
+                    }
+                }
                 self.navigationController?.dismiss(animated: true)
             }
         }

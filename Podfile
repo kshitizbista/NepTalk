@@ -23,4 +23,7 @@ target 'NepTalk' do
     # Pods for testing
   end
   
+  #Google
+  pod 'GoogleSignIn'
+  
 end
