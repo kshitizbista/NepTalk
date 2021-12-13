@@ -166,14 +166,11 @@ class RegisterViewController: UIViewController {
         
         // Firebase login
         DatabaseManager.shared.userExists(with: email.lowercased()) { [weak self] exists in
-            guard let self = self else {
-                return
-            }
+            guard let self = self else { return }
             if !exists {
                 Auth.auth().createUser(withEmail: email.lowercased(), password: password) {  authResult, error in
                     guard let result = authResult, error == nil else {
-                        self.alertUserLoginError(message: "Failed to register user")
-                        print(error!.localizedDescription)
+                        self.alertUserLoginError(message: error!.localizedDescription)
                         return
                     }
                     DatabaseManager.shared.insertUser(with: AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
