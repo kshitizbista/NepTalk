@@ -7,8 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		0A88418D64A60CAA0BDCB607 /* Pods_NepTalkTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F73FD57DFF6B94E2A096B68C /* Pods_NepTalkTests.framework */; };
-		339498036FE746CD2065C883 /* Pods_NepTalk_NepTalkUITests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5E23B0AF1953B10F24F4A40D /* Pods_NepTalk_NepTalkUITests.framework */; };
 		390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E79B3275928BC00B31FAE /* DatabaseManager.swift */; };
 		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
@@ -65,14 +63,8 @@
 		39B7897A274299C8009D9B6E /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		39B7897C274299DC009D9B6E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		39E294012754200900D57C42 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
-		50A83148EEA48B917B08FCAF /* Pods-NepTalk-NepTalkUITests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk-NepTalkUITests.release.xcconfig"; path = "Target Support Files/Pods-NepTalk-NepTalkUITests/Pods-NepTalk-NepTalkUITests.release.xcconfig"; sourceTree = "<group>"; };
-		5A2B38C28FD345DC0CE27409 /* Pods-NepTalkTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalkTests.debug.xcconfig"; path = "Target Support Files/Pods-NepTalkTests/Pods-NepTalkTests.debug.xcconfig"; sourceTree = "<group>"; };
-		5E23B0AF1953B10F24F4A40D /* Pods_NepTalk_NepTalkUITests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalk_NepTalkUITests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		70256C88E3107A57AC793CB7 /* Pods-NepTalkTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalkTests.release.xcconfig"; path = "Target Support Files/Pods-NepTalkTests/Pods-NepTalkTests.release.xcconfig"; sourceTree = "<group>"; };
 		A4CFF32925E561508A7AB5F8 /* Pods-NepTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk.debug.xcconfig"; path = "Target Support Files/Pods-NepTalk/Pods-NepTalk.debug.xcconfig"; sourceTree = "<group>"; };
 		A9FE4876C202A66B549BB4F6 /* Pods-NepTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk.release.xcconfig"; path = "Target Support Files/Pods-NepTalk/Pods-NepTalk.release.xcconfig"; sourceTree = "<group>"; };
-		B59B2049A641393C88A1E338 /* Pods-NepTalk-NepTalkUITests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk-NepTalkUITests.debug.xcconfig"; path = "Target Support Files/Pods-NepTalk-NepTalkUITests/Pods-NepTalk-NepTalkUITests.debug.xcconfig"; sourceTree = "<group>"; };
-		F73FD57DFF6B94E2A096B68C /* Pods_NepTalkTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalkTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,7 +80,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				0A88418D64A60CAA0BDCB607 /* Pods_NepTalkTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -96,7 +87,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				339498036FE746CD2065C883 /* Pods_NepTalk_NepTalkUITests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,10 +197,6 @@
 			children = (
 				A4CFF32925E561508A7AB5F8 /* Pods-NepTalk.debug.xcconfig */,
 				A9FE4876C202A66B549BB4F6 /* Pods-NepTalk.release.xcconfig */,
-				B59B2049A641393C88A1E338 /* Pods-NepTalk-NepTalkUITests.debug.xcconfig */,
-				50A83148EEA48B917B08FCAF /* Pods-NepTalk-NepTalkUITests.release.xcconfig */,
-				5A2B38C28FD345DC0CE27409 /* Pods-NepTalkTests.debug.xcconfig */,
-				70256C88E3107A57AC793CB7 /* Pods-NepTalkTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -219,8 +205,6 @@
 			isa = PBXGroup;
 			children = (
 				2E08A876C8C1B35806110026 /* Pods_NepTalk.framework */,
-				5E23B0AF1953B10F24F4A40D /* Pods_NepTalk_NepTalkUITests.framework */,
-				F73FD57DFF6B94E2A096B68C /* Pods_NepTalkTests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -251,7 +235,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 39B7896627429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalkTests" */;
 			buildPhases = (
-				019027EDC3CF9277B671A276 /* [CP] Check Pods Manifest.lock */,
 				39B7894B27429259009D9B6E /* Sources */,
 				39B7894C27429259009D9B6E /* Frameworks */,
 				39B7894D27429259009D9B6E /* Resources */,
@@ -270,11 +253,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 39B7896927429259009D9B6E /* Build configuration list for PBXNativeTarget "NepTalkUITests" */;
 			buildPhases = (
-				61EF850C012069AE1CE6F940 /* [CP] Check Pods Manifest.lock */,
 				39B7895527429259009D9B6E /* Sources */,
 				39B7895627429259009D9B6E /* Frameworks */,
 				39B7895727429259009D9B6E /* Resources */,
-				BB7ABF0C3406B003AB2B8D4D /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -359,28 +340,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		019027EDC3CF9277B671A276 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NepTalkTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		3805BA9E5FE6337BE4A923B8 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -396,28 +355,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NepTalk/Pods-NepTalk-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		61EF850C012069AE1CE6F940 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-NepTalk-NepTalkUITests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
 		8A984FE96D329DF74DC1ED74 /* [CP] Check Pods Manifest.lock */ = {
@@ -440,23 +377,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		BB7ABF0C3406B003AB2B8D4D /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NepTalk-NepTalkUITests/Pods-NepTalk-NepTalkUITests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-NepTalk-NepTalkUITests/Pods-NepTalk-NepTalkUITests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-NepTalk-NepTalkUITests/Pods-NepTalk-NepTalkUITests-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -711,7 +631,6 @@
 		};
 		39B7896727429259009D9B6E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 5A2B38C28FD345DC0CE27409 /* Pods-NepTalkTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -740,7 +659,6 @@
 		};
 		39B7896827429259009D9B6E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 70256C88E3107A57AC793CB7 /* Pods-NepTalkTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
@@ -768,7 +686,6 @@
 		};
 		39B7896A27429259009D9B6E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = B59B2049A641393C88A1E338 /* Pods-NepTalk-NepTalkUITests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
@@ -792,7 +709,6 @@
 		};
 		39B7896B27429259009D9B6E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 50A83148EEA48B917B08FCAF /* Pods-NepTalk-NepTalkUITests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;

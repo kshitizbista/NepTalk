@@ -14,16 +14,14 @@ target 'NepTalk' do
   #Facebook
   pod 'FBSDKLoginKit'
   
-  target 'NepTalkTests' do
-    inherit! :search_paths
-    # Pods for testing
-  end
-  
-  target 'NepTalkUITests' do
-    # Pods for testing
-  end
-  
   #Google
   pod 'GoogleSignIn'
+  
+  #Realm
+  pod 'RealmSwift', '~>10'
+  
+  pod 'MessageKit'
+  pod 'JGProgressHUD'
+  pod 'SDWebImage'
   
 end
