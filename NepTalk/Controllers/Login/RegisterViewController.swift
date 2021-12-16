@@ -7,8 +7,11 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
         let scrollView: UIScrollView = UIScrollView()
@@ -101,7 +104,7 @@ class RegisterViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Register"
+        title = "Create Account"
         view.backgroundColor = .white
         
         registerButton.addTarget(self, action: #selector(registerButtonTapped), for: .touchUpInside)
@@ -164,9 +167,14 @@ class RegisterViewController: UIViewController {
                   return
               }
         
+        spinner.show(in: view)
+        
         // Firebase login
         DatabaseManager.shared.userExists(with: email.lowercased()) { [weak self] exists in
             guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.spinner.dismiss()
+            }
             if !exists {
                 Auth.auth().createUser(withEmail: email.lowercased(), password: password) {  authResult, error in
                     guard let result = authResult, error == nil else {
@@ -190,7 +198,7 @@ class RegisterViewController: UIViewController {
     
 }
 
-// MARK: - TextField Delegate Extension
+// MARK: - TextField Focus
 extension RegisterViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -207,7 +215,7 @@ extension RegisterViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - ImagePicker Delegate Extension
+// MARK: - ImagePicker 
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     func presentPhotoActionSheet() {
