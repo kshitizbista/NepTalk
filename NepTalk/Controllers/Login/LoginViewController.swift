@@ -9,8 +9,11 @@ import UIKit
 import Firebase
 import FBSDKLoginKit
 import GoogleSignIn
+import JGProgressHUD
 
 class LoginViewController: UIViewController {
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
         let scrollView: UIScrollView = UIScrollView()
@@ -119,7 +122,6 @@ class LoginViewController: UIViewController {
     
     @objc private func registerButtonTapped() {
         let vc = RegisterViewController()
-        vc.title = "Create Account"
         navigationController?.pushViewController(vc, animated: true)
     }
     
@@ -136,9 +138,14 @@ class LoginViewController: UIViewController {
                   return
               }
         
+        spinner.show(in: view)
+        
         // Firebase login
         Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
             guard let self = self else { return }
+            DispatchQueue.main.async {
+                self.spinner.dismiss()
+            }
             if authResult != nil, let error = error  {
                 self.alertUserLoginError(message: error.localizedDescription)
                 return
@@ -155,7 +162,7 @@ class LoginViewController: UIViewController {
     
 }
 
-// MARK: - TextField Delegate Extension
+// MARK: - TextFields Focus Handler
 extension LoginViewController: UITextFieldDelegate {
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
@@ -169,7 +176,7 @@ extension LoginViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - FacebookLoginButton Delegate Extension
+// MARK: - Facebook Login Handler
 extension LoginViewController: LoginButtonDelegate {
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
         // no operation
