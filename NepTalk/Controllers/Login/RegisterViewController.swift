@@ -178,7 +178,7 @@ class RegisterViewController: UIViewController {
             if !exists {
                 Auth.auth().createUser(withEmail: email.lowercased(), password: password) {  authResult, error in
                     guard let result = authResult, error == nil else {
-                        self.alertUserLoginError(message: error!.localizedDescription)
+                        self.alertUserLoginError(message: error?.localizedDescription)
                         return
                     }
                     DatabaseManager.shared.insertUser(with: AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
@@ -190,7 +190,7 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    func alertUserLoginError(title: String = "Login Error", message: String = "Ops! Failed to do operation")  {
+    func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)

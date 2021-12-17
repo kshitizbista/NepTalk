@@ -154,7 +154,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func alertUserLoginError(title: String = "Login Error", message: String = "Ops! Failed to do operation")  {
+    func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
@@ -183,36 +183,36 @@ extension LoginViewController: LoginButtonDelegate {
     }
     
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
-        guard let token = result?.token?.tokenString, error != nil else {
-            alertUserLoginError(message: error!.localizedDescription)
-            return
-        }
-        
-        let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email,first_name, last_name"], tokenString: token, version: nil, httpMethod: .get)
-        facebookRequest.start { [weak self] _, fbResult, error in
-            guard let self = self else { return }
-           
-            guard let fbResult = fbResult as? [String: Any], error == nil else {
-                self.alertUserLoginError(message: "Failed to retrieve data from facebook")
-                return
-            }
-            
-            let credential = FacebookAuthProvider.credential(withAccessToken: token)
-            Auth.auth().signIn(with: credential) { authResult, error in
-                guard let authResult = authResult , error == nil else {
-                    self.alertUserLoginError(message: error!.localizedDescription)
+        if let error = error {
+            alertUserLoginError(message: error.localizedDescription)
+        } else {
+            guard let token = result?.token?.tokenString else { return }
+            let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email,first_name, last_name"], tokenString: token, version: nil, httpMethod: .get)
+            facebookRequest.start { [weak self] _, fbResult, error in
+                guard let self = self else { return }
+                
+                guard let fbResult = fbResult as? [String: Any], error == nil else {
+                    self.alertUserLoginError(message: "Failed to retrieve data from facebook")
                     return
                 }
-                if let email = fbResult["email"] as? String {
-                    let firstName = fbResult["first_name"] as? String
-                    let lastName = fbResult["last_name"] as? String
-                    DatabaseManager.shared.userExists(with: email) { exists in
-                        if !exists {
-                            DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                
+                let credential = FacebookAuthProvider.credential(withAccessToken: token)
+                Auth.auth().signIn(with: credential) { authResult, error in
+                    guard let authResult = authResult , error == nil else {
+                        self.alertUserLoginError(message: error?.localizedDescription)
+                        return
+                    }
+                    if let email = fbResult["email"] as? String {
+                        let firstName = fbResult["first_name"] as? String
+                        let lastName = fbResult["last_name"] as? String
+                        DatabaseManager.shared.userExists(with: email) { exists in
+                            if !exists {
+                                DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                            }
                         }
                     }
+                    self.navigationController?.dismiss(animated: true)
                 }
-                self.navigationController?.dismiss(animated: true)
             }
         }
     }
@@ -232,30 +232,29 @@ extension LoginViewController {
             guard let self = self else { return }
             if let error = error {
                 self.alertUserLoginError(message: error.localizedDescription)
-                return
-            }
-            
-            guard let authentication = user?.authentication, let idToken = authentication.idToken else {
-                self.alertUserLoginError(message: "Failed to retrieve data from Google")
-                return
-            }
-            
-            let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
-            Auth.auth().signIn(with: credential) { authResult, error in
-                guard let authResult = authResult , error == nil else {
-                    self.alertUserLoginError(message: error!.localizedDescription)
+            } else {
+                guard let authentication = user?.authentication, let idToken = authentication.idToken else {
+                    self.alertUserLoginError(message: "Failed to retrieve data from Google")
                     return
                 }
-                if let email = user?.profile?.email {
-                    let firstName = user?.profile?.givenName
-                    let lastName = user?.profile?.familyName
-                    DatabaseManager.shared.userExists(with: email) { exists in
-                        if !exists {
-                            DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                
+                let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
+                Auth.auth().signIn(with: credential) { authResult, error in
+                    guard let authResult = authResult , error == nil else {
+                        self.alertUserLoginError(message: error?.localizedDescription)
+                        return
+                    }
+                    if let email = user?.profile?.email {
+                        let firstName = user?.profile?.givenName
+                        let lastName = user?.profile?.familyName
+                        DatabaseManager.shared.userExists(with: email) { exists in
+                            if !exists {
+                                DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                            }
                         }
                     }
+                    self.navigationController?.dismiss(animated: true)
                 }
-                self.navigationController?.dismiss(animated: true)
             }
         }
     }
