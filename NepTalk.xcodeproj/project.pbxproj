@@ -21,6 +21,7 @@
 		39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B78978274299B4009D9B6E /* VideoPlayerViewController.swift */; };
 		39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897A274299C8009D9B6E /* NewConversationViewController.swift */; };
 		39B7897D274299DC009D9B6E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897C274299DC009D9B6E /* ProfileViewController.swift */; };
+		39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B94A0A276F6835005A7CA9 /* StorageManager.swift */; };
 		39C6545A276BC41B00C63850 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C65459276BC41B00C63850 /* ChatViewController.swift */; };
 		39E294022754200900D57C42 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E294012754200900D57C42 /* Extension.swift */; };
 		D45B682AC88EA4A934C7264B /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2E08A876C8C1B35806110026 /* Pods_NepTalk.framework */; };
@@ -63,6 +64,7 @@
 		39B78978274299B4009D9B6E /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		39B7897A274299C8009D9B6E /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		39B7897C274299DC009D9B6E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		39B94A0A276F6835005A7CA9 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		39C65459276BC41B00C63850 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		39E294012754200900D57C42 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		A4CFF32925E561508A7AB5F8 /* Pods-NepTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk.debug.xcconfig"; path = "Target Support Files/Pods-NepTalk/Pods-NepTalk.debug.xcconfig"; sourceTree = "<group>"; };
@@ -173,6 +175,7 @@
 				39B7893E27429258009D9B6E /* SceneDelegate.swift */,
 				39E294012754200900D57C42 /* Extension.swift */,
 				390E79B3275928BC00B31FAE /* DatabaseManager.swift */,
+				39B94A0A276F6835005A7CA9 /* StorageManager.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -401,6 +404,7 @@
 				39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */,
 				39C6545A276BC41B00C63850 /* ChatViewController.swift in Sources */,
 				39B78977274299A0009D9B6E /* PhotoViewerViewController.swift in Sources */,
+				39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

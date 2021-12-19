@@ -181,7 +181,23 @@ class RegisterViewController: UIViewController {
                         self.alertUserLoginError(message: error?.localizedDescription)
                         return
                     }
-                    DatabaseManager.shared.insertUser(with: AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
+                    let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased())
+                    DatabaseManager.shared.insertUser(with: appUser) { success in
+                        if success {
+                            guard let image = self.imageView.image, let data = image.pngData() else {
+                                return
+                            }
+                            let fileName = appUser.profilePictureFileName
+                            StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                                switch result {
+                                case .success(let downloadUrl):
+                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                case .failure(let error):
+                                    print("Storage manager error: \(error)")
+                                }
+                            }
+                        }
+                    }
                     (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
                 }
             } else {
@@ -190,7 +206,7 @@ class RegisterViewController: UIViewController {
         }
     }
     
-    func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
+    private func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
@@ -218,7 +234,7 @@ extension RegisterViewController: UITextFieldDelegate {
 // MARK: - ImagePicker 
 extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
-    func presentPhotoActionSheet() {
+    private func presentPhotoActionSheet() {
         let actionSheet = UIAlertController(title: "How would you like to select a picture",
                                             message: "",
                                             preferredStyle: .actionSheet)
@@ -239,7 +255,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
         present(actionSheet, animated: true)
     }
     
-    func presentCamera() {
+    private func presentCamera() {
         let vc = UIImagePickerController()
         vc.sourceType = .camera
         vc.delegate = self
@@ -247,7 +263,7 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
         present(vc, animated: true)
     }
     
-    func presentPhotoPicker() {
+    private func presentPhotoPicker() {
         let vc = UIImagePickerController()
         vc.sourceType = .photoLibrary
         vc.delegate = self
