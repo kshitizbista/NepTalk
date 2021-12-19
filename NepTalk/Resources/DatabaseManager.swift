@@ -29,18 +29,24 @@ extension DatabaseManager {
             .queryOrdered(byChild: "email")
             .queryEqual(toValue: email)
             .observeSingleEvent(of: .value) { snapshot in
-            if ((snapshot.value as? NSDictionary) != nil)  {
+                if ((snapshot.value as? NSDictionary) != nil)  {
                     completion(true)
+                } else {
+                    completion(false)
+                }
             }
-            else {
-                completion(false)
-            }
-        }
     }
     
     /// Inserts new user to databse
-    public func insertUser (with user: AppUser) {
-        database.child("users/\(user.uid)").setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email])
+    public func insertUser (with user: AppUser, completion: @escaping (Bool) -> Void) {
+        database.child("users/\(user.uid)").setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email]) { error, _ in
+            if error == nil  {
+                completion(true)
+            } else {
+                print("failed to write to database")
+                completion(false)
+            }
+        }
     }
 }
 
@@ -49,5 +55,8 @@ struct AppUser {
     let firstName: String
     let lastName: String
     let email: String
-    //    let profilePictureUrl: String
+    
+    var profilePictureFileName: String {
+        return "\(uid)_profile_pic.png"
+    }
 }
