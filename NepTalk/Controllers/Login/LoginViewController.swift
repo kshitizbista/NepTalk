@@ -150,7 +150,7 @@ class LoginViewController: UIViewController {
                 self.alertUserLoginError(message: error.localizedDescription)
                 return
             }
-            self.navigationController?.dismiss(animated: true, completion: nil)
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
         }
     }
     
@@ -159,7 +159,6 @@ class LoginViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
     }
-    
 }
 
 // MARK: - TextFields Focus Handler
@@ -197,6 +196,7 @@ extension LoginViewController: LoginButtonDelegate {
                 }
                 
                 let credential = FacebookAuthProvider.credential(withAccessToken: token)
+                self.spinner.show(in: self.view)
                 Auth.auth().signIn(with: credential) { authResult, error in
                     guard let authResult = authResult , error == nil else {
                         self.alertUserLoginError(message: error?.localizedDescription)
@@ -211,7 +211,10 @@ extension LoginViewController: LoginButtonDelegate {
                             }
                         }
                     }
-                    self.navigationController?.dismiss(animated: true)
+                    DispatchQueue.main.async {
+                        self.spinner.dismiss()
+                    }
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
                 }
             }
         }
@@ -239,6 +242,7 @@ extension LoginViewController {
                 }
                 
                 let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
+                self.spinner.show(in: self.view)
                 Auth.auth().signIn(with: credential) { authResult, error in
                     guard let authResult = authResult , error == nil else {
                         self.alertUserLoginError(message: error?.localizedDescription)
@@ -253,7 +257,10 @@ extension LoginViewController {
                             }
                         }
                     }
-                    self.navigationController?.dismiss(animated: true)
+                    DispatchQueue.main.async {
+                        self.spinner.dismiss()
+                    }
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
                 }
             }
         }

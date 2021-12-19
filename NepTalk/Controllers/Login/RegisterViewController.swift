@@ -182,7 +182,7 @@ class RegisterViewController: UIViewController {
                         return
                     }
                     DatabaseManager.shared.insertUser(with: AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased()))
-                    self.navigationController?.dismiss(animated: true, completion: nil)
+                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
                 }
             } else {
                 self.alertUserLoginError(message: "User account for that email address already exists")
