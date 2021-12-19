@@ -21,7 +21,6 @@ class ProfileViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
     }
-    
 }
 
 extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
@@ -42,19 +41,15 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
         
         let actionSheet = UIAlertController(title: "Do you want to log out ?", message: "", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { [weak self] _ in
-            guard let self = self else { return }
+        actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: {_ in
+            FBSDKLoginKit.LoginManager().logOut()
             do {
-                try FirebaseAuth.Auth.auth().signOut()
-                let vc = LoginViewController()
-                let nav = UINavigationController(rootViewController: vc)
-                nav.modalPresentationStyle = .fullScreen
-                self.present(nav, animated: true)
+                try Auth.auth().signOut()
             } catch {
                 print("Failed to log out")
                 print(error)
             }
-            FBSDKLoginKit.LoginManager().logOut()
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "LoginNavigationController")
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(actionSheet, animated: true)

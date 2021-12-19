@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Firebase
 import JGProgressHUD
 
 class ConversationsViewController: UIViewController {
@@ -43,20 +42,6 @@ class ConversationsViewController: UIViewController {
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
-    }
-    
-    override func viewDidAppear(_ animated: Bool) {
-        super.viewDidAppear(animated)
-        validateAuth()
-    }
-    
-    private func validateAuth() {
-        if Auth.auth().currentUser == nil {
-            let vc = LoginViewController()
-            let nav = UINavigationController(rootViewController: vc)
-            nav.modalPresentationStyle = .fullScreen
-            present(nav, animated: false)
-        }
     }
     
     private func fetchConversation() {
