@@ -154,7 +154,7 @@ class LoginViewController: UIViewController {
         }
     }
     
-    func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
+    private func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
         let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
         present(alert, animated: true)
@@ -186,7 +186,7 @@ extension LoginViewController: LoginButtonDelegate {
             alertUserLoginError(message: error.localizedDescription)
         } else {
             guard let token = result?.token?.tokenString else { return }
-            let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email,first_name, last_name"], tokenString: token, version: nil, httpMethod: .get)
+            let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email,first_name, last_name, picture.type(large)"], tokenString: token, version: nil, httpMethod: .get)
             facebookRequest.start { [weak self] _, fbResult, error in
                 guard let self = self else { return }
                 
@@ -206,8 +206,34 @@ extension LoginViewController: LoginButtonDelegate {
                         let firstName = fbResult["first_name"] as? String
                         let lastName = fbResult["last_name"] as? String
                         DatabaseManager.shared.userExists(with: email) { exists in
+                            let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
                             if !exists {
-                                DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                                DatabaseManager.shared.insertUser(with: appUser) { success in
+                                    if success, let picture = fbResult["picture"] as? [String: Any],
+                                       let data = picture["data"] as? [String: Any], let pictureUrl = data["url"] as? String {
+                                        
+                                        guard let url = URL(string: pictureUrl) else { return }
+                                        
+                                        print("Downloading data from facebook image")
+                                        
+                                        URLSession.shared.dataTask(with: url) { data, urlResponse, error in
+                                            guard let data = data else {
+                                                print("Failed to get data from facebook")
+                                                return
+                                            }
+                                            print("Got data from FB, uploading....")
+                                            let fileName = appUser.profilePictureFileName
+                                            StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                                                switch result {
+                                                case .success(let downloadUrl):
+                                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                                case .failure(let error):
+                                                    print("Storage manager error: \(error)")
+                                                }
+                                            }
+                                        }.resume()
+                                    }
+                                }
                             }
                         }
                     }
@@ -248,12 +274,30 @@ extension LoginViewController {
                         self.alertUserLoginError(message: error?.localizedDescription)
                         return
                     }
-                    if let email = user?.profile?.email {
-                        let firstName = user?.profile?.givenName
-                        let lastName = user?.profile?.familyName
+                    if let userProfile = user?.profile {
+                        let email = userProfile.email
+                        let firstName = userProfile.givenName
+                        let lastName = userProfile.familyName
                         DatabaseManager.shared.userExists(with: email) { exists in
                             if !exists {
-                                DatabaseManager.shared.insertUser(with: AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email))
+                                let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
+                                DatabaseManager.shared.insertUser(with: appUser) { success in
+                                    if success && userProfile.hasImage {
+                                        let fileName = appUser.profilePictureFileName
+                                        guard let imageUrl = userProfile.imageURL(withDimension: 200) else { return }
+                                        URLSession.shared.dataTask(with: imageUrl) { data, _, _ in
+                                            guard let data = data else {return}
+                                            StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                                                switch result {
+                                                case .success(let downloadUrl):
+                                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                                case .failure(let error):
+                                                    print("Storage manager error: \(error)")
+                                                }
+                                            }
+                                        }.resume()
+                                    }
+                                }
                             }
                         }
                     }
