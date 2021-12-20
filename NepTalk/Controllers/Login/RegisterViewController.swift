@@ -170,7 +170,7 @@ class RegisterViewController: UIViewController {
         spinner.show(in: view)
         
         // Firebase login
-        DatabaseManager.shared.userExists(with: email.lowercased()) { [weak self] exists in
+        DatabaseManager.shared.userExists(with: email) { [weak self] exists in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.spinner.dismiss()
@@ -181,7 +181,7 @@ class RegisterViewController: UIViewController {
                         self.alertUserLoginError(message: error?.localizedDescription)
                         return
                     }
-                    let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email.lowercased())
+                    let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email)
                     DatabaseManager.shared.insertUser(with: appUser) { success in
                         if success {
                             guard let image = self.imageView.image, let data = image.pngData() else {
