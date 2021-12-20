@@ -11,8 +11,8 @@ import FirebaseAuth
 
 final class DatabaseManager {
     
+    private init() {}
     static let shared = DatabaseManager()
-    
     private let database = Database.database().reference()
     
 }
@@ -27,7 +27,7 @@ extension DatabaseManager {
     public func userExists(with email: String, completion: @escaping ((Bool) -> Void)) {
         database.child("users")
             .queryOrdered(byChild: "email")
-            .queryEqual(toValue: email)
+            .queryEqual(toValue: email.lowercased())
             .observeSingleEvent(of: .value) { snapshot in
                 if ((snapshot.value as? NSDictionary) != nil)  {
                     completion(true)
@@ -54,9 +54,23 @@ struct AppUser {
     let uid: String
     let firstName: String
     let lastName: String
-    let email: String
-    
+    var email: String {
+        get {
+            return lowerCasedEmail
+        }
+        set {
+            lowerCasedEmail = newValue.lowercased()
+        }
+    }
     var profilePictureFileName: String {
         return "\(uid)_profile_pic.png"
+    }
+    private var lowerCasedEmail: String = ""
+    
+    init(uid: String, firstName: String, lastName: String, email: String) {
+        self.uid = uid
+        self.firstName = firstName
+        self.lastName = lastName
+        self.email = email
     }
 }
