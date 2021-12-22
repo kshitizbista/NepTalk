@@ -150,6 +150,7 @@ class LoginViewController: UIViewController {
                 self.alertUserLoginError(message: error.localizedDescription)
                 return
             }
+            UserDefaults.standard.set(authResult!.user.uid, forKey: "uid")
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
         }
     }
@@ -205,7 +206,8 @@ extension LoginViewController: LoginButtonDelegate {
                     if let email = fbResult["email"] as? String {
                         let firstName = fbResult["first_name"] as? String
                         let lastName = fbResult["last_name"] as? String
-                        DatabaseManager.shared.userExists(with: email) { exists in
+                        UserDefaults.standard.set(authResult.user.uid, forKey: "uid")
+                        DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
                             if !exists {
                                 DatabaseManager.shared.insertUser(with: appUser) { success in
@@ -276,11 +278,12 @@ extension LoginViewController {
                     }
                     if let userProfile = user?.profile {
                         let email = userProfile.email
-                        let firstName = userProfile.givenName
-                        let lastName = userProfile.familyName
-                        DatabaseManager.shared.userExists(with: email) { exists in
+                        let firstName = userProfile.givenName ?? ""
+                        let lastName = userProfile.familyName ?? ""
+                        UserDefaults.standard.set(authResult.user.uid, forKey: "uid")
+                        DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             if !exists {
-                                let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
+                                let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
                                 DatabaseManager.shared.insertUser(with: appUser) { success in
                                     if success && userProfile.hasImage {
                                         let fileName = appUser.profilePictureFileName

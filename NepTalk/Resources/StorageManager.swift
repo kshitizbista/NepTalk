@@ -21,7 +21,7 @@ final class StorageManager {
         case failedToGetDownloadUrl
     }
     
-    public func uploadProfilePicture(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
+    func uploadProfilePicture(with data: Data, fileName: String, completion: @escaping UploadPictureCompletion) {
         storage.child("images/\(fileName)").putData(data, metadata: nil) { [weak self] metaData, error in
             guard let self = self else {return}
             guard error == nil else {
@@ -42,5 +42,14 @@ final class StorageManager {
         }
     }
     
+    func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        storage.child(path).downloadURL { url, error in
+            guard let url = url, error == nil  else {
+                completion(.failure(StorageErrors.failedToGetDownloadUrl))
+                return
+            }
+            completion(.success(url))
+        }
+    }
     
 }
