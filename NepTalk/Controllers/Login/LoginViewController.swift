@@ -108,7 +108,6 @@ class LoginViewController: UIViewController {
     }
     
     override func viewDidLayoutSubviews() {
-        print("heloooooo")
         super.viewDidLayoutSubviews()
         scrollView.frame = view.bounds
         
@@ -208,7 +207,7 @@ extension LoginViewController: LoginButtonDelegate {
                         let firstName = fbResult["first_name"] as? String
                         let lastName = fbResult["last_name"] as? String
                         UserDefaults.standard.set(authResult.user.uid, forKey: "uid")
-                        DatabaseManager.shared.userExists(with: email) { exists in
+                        DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
                             if !exists {
                                 DatabaseManager.shared.insertUser(with: appUser) { success in
@@ -282,7 +281,7 @@ extension LoginViewController {
                         let firstName = userProfile.givenName ?? ""
                         let lastName = userProfile.familyName ?? ""
                         UserDefaults.standard.set(authResult.user.uid, forKey: "uid")
-                        DatabaseManager.shared.userExists(with: email) { exists in
+                        DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             if !exists {
                                 let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
                                 DatabaseManager.shared.insertUser(with: appUser) { success in

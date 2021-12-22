@@ -170,40 +170,34 @@ class RegisterViewController: UIViewController {
         spinner.show(in: view)
         
         // Firebase login
-        DatabaseManager.shared.userExists(with: email) { [weak self] exists in
+        Auth.auth().createUser(withEmail: email.lowercased(), password: password) { [weak self] authResult, error in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.spinner.dismiss()
             }
-            if !exists {
-                Auth.auth().createUser(withEmail: email.lowercased(), password: password) {  authResult, error in
-                    guard let result = authResult, error == nil else {
-                        self.alertUserLoginError(message: error?.localizedDescription)
+            guard let result = authResult, error == nil else {
+                self.alertUserLoginError(message: error?.localizedDescription)
+                return
+            }
+            UserDefaults.standard.set(result.user.uid, forKey: "uid")
+            let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email)
+            DatabaseManager.shared.insertUser(with: appUser) { success in
+                if success {
+                    guard let image = self.imageView.image, let data = image.pngData() else {
                         return
                     }
-                    UserDefaults.standard.set(result.user.uid, forKey: "uid")
-                    let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email)
-                    DatabaseManager.shared.insertUser(with: appUser) { success in
-                        if success {
-                            guard let image = self.imageView.image, let data = image.pngData() else {
-                                return
-                            }
-                            let fileName = appUser.profilePictureFileName
-                            StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
-                                switch result {
-                                case .success(let downloadUrl):
-                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
-                                case .failure(let error):
-                                    print("Storage manager error: \(error)")
-                                }
-                            }
+                    let fileName = appUser.profilePictureFileName
+                    StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                        switch result {
+                        case .success(let downloadUrl):
+                            UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                        case .failure(let error):
+                            print("Storage manager error: \(error)")
                         }
                     }
-                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
                 }
-            } else {
-                self.alertUserLoginError(message: "User account for that email address already exists")
             }
+            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
         }
     }
     
