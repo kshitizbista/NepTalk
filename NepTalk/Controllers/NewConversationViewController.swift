@@ -92,7 +92,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         self.searchUsers(query: text)
     }
     
-    func searchUsers(query: String) {
+    private func searchUsers(query: String) {
         // check if array has firebase results
         if hasFetched {
             // if it does: filter
@@ -112,23 +112,22 @@ extension NewConversationViewController: UISearchBarDelegate {
         }
     }
     
-    func filterUsers(with term: String) {
+    private func filterUsers(with term: String) {
         // update the UI: either show results or show no result label
-        self.spinner.dismiss()
-        if hasFetched {
-            let results: [[String: String]] = self.users.filter {
-                guard let name = $0["name"]?.lowercased() else {
-                    return false
-                }
-                return name.hasPrefix(term.lowercased())
+        let results: [[String: String]] = self.users.filter {
+            guard let name = $0["name"]?.lowercased() else {
+                return false
             }
-            
-            self.results = results
-            updateUI()
+            return name.hasPrefix(term.lowercased())
+        }
+        self.results = results
+        DispatchQueue.main.async {
+            self.spinner.dismiss()
+            self.updateUI()
         }
     }
     
-    func updateUI(){
+    private func updateUI(){
         if results.isEmpty {
             self.noResultLabel.isHidden = false
             self.tableView.isHidden = true
