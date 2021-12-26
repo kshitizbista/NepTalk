@@ -150,7 +150,7 @@ class LoginViewController: UIViewController {
                 self.alertUserLoginError(message: error.localizedDescription)
                 return
             }
-            UserDefaults.standard.set(authResult!.user.uid, forKey: "uid")
+            UserDefaults.standard.set(email, forKey: "email")
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
         }
     }
@@ -206,7 +206,7 @@ extension LoginViewController: LoginButtonDelegate {
                     if let email = fbResult["email"] as? String {
                         let firstName = fbResult["first_name"] as? String
                         let lastName = fbResult["last_name"] as? String
-                        UserDefaults.standard.set(authResult.user.uid, forKey: "uid")
+                        UserDefaults.standard.set(email, forKey: "email")
                         DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
                             if !exists {
@@ -280,7 +280,7 @@ extension LoginViewController {
                         let email = userProfile.email
                         let firstName = userProfile.givenName ?? ""
                         let lastName = userProfile.familyName ?? ""
-                        UserDefaults.standard.set(authResult.user.uid, forKey: "uid")
+                        UserDefaults.standard.set(email, forKey: "email")
                         DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             if !exists {
                                 let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)

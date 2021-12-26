@@ -24,9 +24,6 @@ class ProfileViewController: UIViewController {
     }
     
     private func createTableHeader() -> UIView? {
-        guard let uid = UserDefaults.standard.value(forKey: "uid") else {
-            return nil
-        }
         let headerView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.width, height: 300))
         headerView.backgroundColor = UIColor(named: "brand-blue")
         
@@ -39,6 +36,7 @@ class ProfileViewController: UIViewController {
         imageView.layer.cornerRadius = imageView.width / 2
         headerView.addSubview(imageView)
         
+        let uid = DatabaseManager.shared.getCurrentUser()!.uid
         let path = "images/\(uid)_profile_pic.png"
         StorageManager.shared.downloadURL(for: path) { [weak self] result in
             switch result {
