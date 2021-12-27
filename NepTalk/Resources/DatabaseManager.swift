@@ -101,34 +101,6 @@ extension DatabaseManager {
 // MARK: - Message Handler
 extension DatabaseManager {
     
-    
-    //    "unique_identifier" {
-    //        "messages": [
-    //            {
-    //                "id": String,
-    //                "type": text, photo, video,
-    //                "content": String,
-    //                "date": Date(),
-    //                "sender_email": String,
-    //                "isRead": true/false
-    //            }
-    //        ]
-    //    }
-    
-    
-    //     conversation => [
-    //        [
-    //            "id": "unique_identifier"
-    //            "receiver_email": String
-    //            "latest_message": => {
-    //                    "date": Date(),
-    //                    "latest_message": "message",
-    //                    "is_read": true/false
-    //                }
-    //        ]
-    //     ]
-    
-    
     /// Create a new conversation with target user email
     public func createNewConversation(with receiverEmail: String, name: String, message: Message, completion: @escaping (Bool) -> Void) {
         guard let _ = UserDefaults.standard.value(forKey: "email") as? String, let uid = getCurrentUser()?.uid else {
@@ -171,7 +143,7 @@ extension DatabaseManager {
                 "name": name,
                 "latest_message": [
                     "date": dateString,
-                    "latest_message": newMessage,
+                    "message": newMessage,
                     "is_read": false
                 ]
             ]
@@ -201,9 +173,31 @@ extension DatabaseManager {
         }
     }
     
-    /// Fetche and return all convsersation for the user with passed in email
-    public func getAllConversations(for email: String, completion: @escaping (Result<String, Error>) -> Void) {
-        
+    /// Fetch and return all convsersation for the user with passed in email
+    public func getAllConversations(completion: @escaping (Result<[Conversation], Error>) -> Void) {
+        guard let uid = getCurrentUser()?.uid else {
+            return
+        }
+        database.child("\(uid)/conversations").observe(.value) { snapshot in
+            guard let value = snapshot.value as? [[String: Any]] else {
+                completion(.failure(DatabaseError.failedToFetch))
+                return
+            }
+            let conversations: [Conversation] = value.compactMap { dictionary in
+                guard let conversationId = dictionary["id"] as? String,
+                      let name = dictionary["name"] as? String,
+                      let receiverEmail = dictionary["receiver_email"] as? String,
+                      let latestMessage = dictionary["latest_message"] as? [String: Any],
+                      let date = latestMessage["date"] as? String,
+                      let message = latestMessage["message"] as? String,
+                      let isRead = latestMessage["is_read"] as? Bool else {
+                          return nil
+                      }
+                let latestMessageObject = LatestMessage(date: date, message: message, isRead: isRead)
+                return Conversation(id: conversationId, name: name, receiverEmail: receiverEmail, latestMessage: latestMessageObject)
+            }
+            completion(.success(conversations))
+        }
     }
     
     /// Get all messages for a given conversation
