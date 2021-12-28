@@ -8,13 +8,18 @@
 import UIKit
 import JGProgressHUD
 
+struct UserResult {
+    let uid: String
+    let email: String
+    let name: String
+}
+
 class NewConversationViewController: UIViewController {
     
-    public var completion: (([String: String]) -> Void)?
-    
+    public var completion: ((UserResult) -> Void)?
     private let spinner = JGProgressHUD(style: .dark)
-    private var users = [[String: String]]()
-    private var results = [[String: String]]()
+    private var users = [UserResult]()
+    private var results = [UserResult]()
     private var hasFetched = false
     
     private let searchBar: UISearchBar = {
@@ -71,7 +76,7 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "cell",for: indexPath)
-        cell.textLabel?.text = results[indexPath.row]["name"]
+        cell.textLabel?.text = results[indexPath.row].name
         return cell
     }
     
@@ -118,10 +123,8 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     private func filterUsers(with term: String) {
         // update the UI: either show results or show no result label
-        let results: [[String: String]] = self.users.filter {
-            guard let name = $0["name"]?.lowercased() else {
-                return false
-            }
+        let results = self.users.filter {
+            let name = $0.name.lowercased()
             return name.hasPrefix(term.lowercased())
         }
         self.results = results

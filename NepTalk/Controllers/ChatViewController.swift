@@ -59,7 +59,7 @@ class ChatViewController: MessagesViewController {
         return formatter
     }()
     public var isNewConversation = false
-    private let receiverEmail: String
+    private let userResult: UserResult
     private var messages = [Message]()
     private var selfSender: Sender? {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
@@ -68,8 +68,8 @@ class ChatViewController: MessagesViewController {
         return Sender(senderId:email, displayName: "Joe Smith", photoURL: "")
     }
     
-    init(with email: String) {
-        self.receiverEmail = email
+    init(with: UserResult) {
+        self.userResult = with
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -118,7 +118,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         if isNewConversation {
             //create convo in database
             let message = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
-            DatabaseManager.shared.createNewConversation(with: receiverEmail, name: self.title ?? "User", message: message) { success in
+            DatabaseManager.shared.createNewConversation(with: userResult.email, receiverUID: userResult.uid, name: userResult.name, message: message) { success in
                 if success {
                     print("message sent")
                 }else {
@@ -131,14 +131,16 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
     }
     
     private func createMessageId() -> String? {
-        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
-            return nil
-        }
-        
-        let safeReceiverEmail = DatabaseManager.safeEmail(email: receiverEmail)
-        let safeCurrentUserEmail = DatabaseManager.safeEmail(email: currentUserEmail)
+//        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+//            return nil
+//        }
+//
+//        let receiverUID = DatabaseManager.safeEmail(email: userResult.email)
+//        let currentUserUID = DatabaseManager.safeEmail(email: currentUserEmail)
+        let receiverUID = userResult.uid
+        let currentUserUID = DatabaseManager.shared.getCurrentUser()!.uid
         let dateString = Self.dateFormatter.string(from: Date())
-        let newIdentifier = "\(safeReceiverEmail)_\(safeCurrentUserEmail)_\(dateString)"
+        let newIdentifier = "\(receiverUID)_\(currentUserUID)_\(dateString)"
         return newIdentifier
     }
 }

@@ -12,6 +12,7 @@ struct Conversation {
     let id: String
     let name: String
     let receiverEmail: String
+    let receiverUID: String
     let latestMessage: LatestMessage
 }
 
@@ -90,13 +91,10 @@ class ConversationsViewController: UIViewController {
         present(nav, animated: true)
     }
     
-    private func createNewConversation(result: [String: String]) {
-        guard let name = result["name"], let email = result["email"] else {
-            return
-        }
-        let vc = ChatViewController(with: email)
+    private func createNewConversation(result: UserResult) {
+        let vc = ChatViewController(with: result)
         vc.isNewConversation = true
-        vc.title = name
+        vc.title = result.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: false)
     }
@@ -118,7 +116,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        let vc = ChatViewController(with: model.receiverEmail)
+        let vc = ChatViewController(with: UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.name))
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)

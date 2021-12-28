@@ -58,7 +58,8 @@ extension DatabaseManager {
                 if var userCollections = snapshot.value as? [[String: String]] {
                     let newElements = [
                         "name": user.firstName + " " + user.lastName,
-                        "email": user.email
+                        "email": user.email,
+                        "uid": user.uid
                     ]
                     userCollections.append(newElements)
                     self.database.child("users").setValue(userCollections) { error, _ in
@@ -72,7 +73,8 @@ extension DatabaseManager {
                     let newCollection: [[String: String]] = [
                         [
                             "name": user.firstName + " " + user.lastName,
-                            "email": user.email
+                            "email": user.email,
+                            "uid": user.uid
                         ]
                     ]
                     self.database.child("users").setValue(newCollection) { error, _ in
@@ -87,13 +89,23 @@ extension DatabaseManager {
         }
     }
     
-    public func getAllUsers(completion: @escaping (Result<[[String: String]], Error>) -> Void) {
+    public func getAllUsers(completion: @escaping (Result<[UserResult], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
             }
-            completion(.success(value))
+            
+            let searchResult: [UserResult] = value.compactMap { dictionary in
+                guard let email = dictionary["email"],
+                      let name = dictionary["name"] ,
+                      let uid = dictionary["uid"] else {
+                          return nil
+                      }
+                return UserResult(uid: uid, email: email, name: name)
+            }
+            
+            completion(.success(searchResult))
         }
     }
 }
@@ -102,7 +114,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     /// Create a new conversation with target user email
-    public func createNewConversation(with receiverEmail: String, name: String, message: Message, completion: @escaping (Bool) -> Void) {
+    public func createNewConversation(with receiverEmail: String, receiverUID: String, name: String, message: Message, completion: @escaping (Bool) -> Void) {
         guard let _ = UserDefaults.standard.value(forKey: "email") as? String, let uid = getCurrentUser()?.uid else {
             return
         }
@@ -140,6 +152,7 @@ extension DatabaseManager {
             let newConversationData: [String: Any] = [
                 "id": conversationId,
                 "receiver_email": receiverEmail,
+                "receiver_uid": receiverUID,
                 "name": name,
                 "latest_message": [
                     "date": dateString,
@@ -187,6 +200,7 @@ extension DatabaseManager {
                 guard let conversationId = dictionary["id"] as? String,
                       let name = dictionary["name"] as? String,
                       let receiverEmail = dictionary["receiver_email"] as? String,
+                      let receiverUID = dictionary["receiver_uid"] as? String,
                       let latestMessage = dictionary["latest_message"] as? [String: Any],
                       let date = latestMessage["date"] as? String,
                       let message = latestMessage["message"] as? String,
@@ -194,7 +208,7 @@ extension DatabaseManager {
                           return nil
                       }
                 let latestMessageObject = LatestMessage(date: date, message: message, isRead: isRead)
-                return Conversation(id: conversationId, name: name, receiverEmail: receiverEmail, latestMessage: latestMessageObject)
+                return Conversation(id: conversationId, name: name, receiverEmail: receiverEmail, receiverUID: receiverUID, latestMessage: latestMessageObject)
             }
             completion(.success(conversations))
         }
