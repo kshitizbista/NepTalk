@@ -271,18 +271,10 @@ struct AppUser {
     let uid: String
     let firstName: String
     let lastName: String
-    var email: String {
-        get {
-            return lowerCasedEmail
-        }
-        set {
-            lowerCasedEmail = newValue.lowercased()
-        }
-    }
+    var email: String
     var profilePictureFileName: String {
         return "\(uid)_profile_pic.png"
     }
-    private var lowerCasedEmail: String = ""
     
     init(uid: String, firstName: String, lastName: String, email: String) {
         self.uid = uid
