@@ -92,7 +92,7 @@ class ConversationsViewController: UIViewController {
     }
     
     private func createNewConversation(result: UserResult) {
-        let vc = ChatViewController(with: result)
+        let vc = ChatViewController(with: result, id: nil)
         vc.isNewConversation = true
         vc.title = result.name
         vc.navigationItem.largeTitleDisplayMode = .never
@@ -116,7 +116,8 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        let vc = ChatViewController(with: UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.name))
+        let userResult = UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.name)
+        let vc = ChatViewController(with:userResult, id: model.id)
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
