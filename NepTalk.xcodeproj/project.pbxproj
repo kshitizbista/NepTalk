@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E79B3275928BC00B31FAE /* DatabaseManager.swift */; };
+		3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */; };
 		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
 		39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893E27429258009D9B6E /* SceneDelegate.swift */; };
@@ -47,6 +48,7 @@
 /* Begin PBXFileReference section */
 		2E08A876C8C1B35806110026 /* Pods_NepTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		390E79B3275928BC00B31FAE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		39920D6C275810E90066EA77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39B7893C27429258009D9B6E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -150,6 +152,7 @@
 			children = (
 				39B7897127429783009D9B6E /* Storyboards */,
 				39B7894527429259009D9B6E /* Assets.xcassets */,
+				3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -402,6 +405,7 @@
 				39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */,
 				39B7897D274299DC009D9B6E /* ProfileViewController.swift in Sources */,
 				39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */,
+				3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */,
 				39C6545A276BC41B00C63850 /* ChatViewController.swift in Sources */,
 				39B78977274299A0009D9B6E /* PhotoViewerViewController.swift in Sources */,
 				39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */,

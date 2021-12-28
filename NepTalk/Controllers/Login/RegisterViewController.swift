@@ -170,7 +170,7 @@ class RegisterViewController: UIViewController {
         spinner.show(in: view)
         
         // Firebase login
-        Auth.auth().createUser(withEmail: email.lowercased(), password: password) { [weak self] authResult, error in
+        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
             guard let self = self else { return }
             DispatchQueue.main.async {
                 self.spinner.dismiss()

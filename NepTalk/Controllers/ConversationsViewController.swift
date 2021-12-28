@@ -8,14 +8,30 @@
 import UIKit
 import JGProgressHUD
 
+struct Conversation {
+    let id: String
+    let name: String
+    let receiverEmail: String
+    let receiverUID: String
+    let latestMessage: LatestMessage
+}
+
+struct LatestMessage {
+    let date: String
+    let message: String
+    let isRead: Bool
+}
+
 class ConversationsViewController: UIViewController {
+    
+    private var conversations = [Conversation]()
     
     private let spinner = JGProgressHUD(style: .dark)
     
     private let tableView: UITableView = {
         let tableView = UITableView()
         tableView.isHidden = true
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ConversationTableViewCell.self, forCellReuseIdentifier: ConversationTableViewCell.identifier)
         return tableView
     }()
     
@@ -37,6 +53,7 @@ class ConversationsViewController: UIViewController {
         tableView.delegate = self
         tableView.dataSource = self
         fetchConversation()
+        startListeningForConversations()
     }
     
     override func viewDidLayoutSubviews() {
@@ -48,6 +65,23 @@ class ConversationsViewController: UIViewController {
         tableView.isHidden = false
     }
     
+    private func startListeningForConversations() {
+        DatabaseManager.shared.getAllConversations{ [weak self] result in
+            switch result {
+            case .success(let conversations):
+                guard !conversations.isEmpty else {
+                    return
+                }
+                self?.conversations = conversations
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            case .failure(let error):
+                print("failed to get convos: \(error)")
+            }
+        }
+    }
+    
     @objc private func didTapComposeButton() {
         let vc = NewConversationViewController()
         vc.completion = { [weak self] result in
@@ -57,13 +91,10 @@ class ConversationsViewController: UIViewController {
         present(nav, animated: true)
     }
     
-    private func createNewConversation(result: [String: String]) {
-        guard let name = result["name"], let email = result["email"] else {
-            return
-        }
-        let vc = ChatViewController(with: email)
+    private func createNewConversation(result: UserResult) {
+        let vc = ChatViewController(with: result, id: nil)
         vc.isNewConversation = true
-        vc.title = name
+        vc.title = result.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: false)
     }
@@ -71,22 +102,29 @@ class ConversationsViewController: UIViewController {
 
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 1
+        return conversations.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = "Hello World"
+        let cell = tableView.dequeueReusableCell(withIdentifier: ConversationTableViewCell.identifier, for: indexPath) as! ConversationTableViewCell
+        let model = conversations[indexPath.row]
         cell.accessoryType = .disclosureIndicator
+        cell.configure(with: model)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let vc = ChatViewController(with: "tse@gmail.com")
-        vc.title = "Jenny Smith"
+        let model = conversations[indexPath.row]
+        let userResult = UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.name)
+        let vc = ChatViewController(with:userResult, id: model.id)
+        vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
     }
 }
 
