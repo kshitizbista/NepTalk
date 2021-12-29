@@ -10,7 +10,7 @@ import JGProgressHUD
 
 struct Conversation {
     let id: String
-    let name: String
+    let receiverName: String
     let receiverEmail: String
     let receiverUID: String
     let latestMessage: LatestMessage
@@ -116,9 +116,9 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        let userResult = UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.name)
+        let userResult = UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.receiverName)
         let vc = ChatViewController(with:userResult, id: model.id)
-        vc.title = model.name
+        vc.title = model.receiverName
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }

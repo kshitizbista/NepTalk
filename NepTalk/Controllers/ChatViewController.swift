@@ -63,10 +63,11 @@ class ChatViewController: MessagesViewController {
     private let conversationId: String?
     private var messages = [Message]()
     private var selfSender: Sender? {
-        guard let email = DatabaseManager.shared.getCurrentUser()?.email else {
-            return nil
-        }
-        return Sender(senderId:email, displayName: "Me", photoURL: "")
+        guard let email = DatabaseManager.shared.getCurrentUser()?.email,
+              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+                  return nil
+              }
+        return Sender(senderId:email, displayName: senderName, photoURL: "")
     }
     
     init(with: UserResult, id: String?) {
@@ -153,8 +154,9 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 }
             }
         } else {
-            // append tp existing conversation data
-            DatabaseManager.shared.sendMessage(to: receipentUser.email, message: message) { success in
+            // append to existing conversation data
+            guard let conversationId = conversationId else { return }
+            DatabaseManager.shared.sendMessage(to: conversationId, message: message) { success in
                 if success {
                     print("message sent")
                 } else {

@@ -117,11 +117,10 @@ extension DatabaseManager {
         guard let senderEmail = getCurrentUser()?.email,
               let senderUID = getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
-                  completion(false)
                   return
               }
         let senderRef = database.child("\(senderUID)/conversations")
-        let receiverRef = self.database.child("\(receiverUID)/conversations")
+        let receiverRef = database.child("\(receiverUID)/conversations")
         let messageDate = message.sentDate
         let dateString = ChatViewController.dateFormatter.string(from: messageDate)
         
@@ -154,7 +153,7 @@ extension DatabaseManager {
             "id": conversationId,
             "receiver_email": receiverEmail,
             "receiver_uid": receiverUID,
-            "name": receiverName,
+            "receiver_name": receiverName,
             "latest_message": [
                 "date": dateString,
                 "message": newMessage,
@@ -166,7 +165,7 @@ extension DatabaseManager {
             "id": conversationId,
             "receiver_email": senderEmail,
             "receiver_uid": senderUID,
-            "name": senderName,
+            "receiver_name": senderName,
             "latest_message": [
                 "date": dateString,
                 "message": newMessage,
@@ -176,6 +175,7 @@ extension DatabaseManager {
         
         senderRef.observeSingleEvent(of: .value) { [weak self] snapshot in
             guard let self = self else { return }
+            
             receiverRef.observeSingleEvent(of: .value) { snapshot in
                 if var conversations = snapshot.value as? [[String: Any]] {
                     conversations.append(receiverConversation)
@@ -217,7 +217,7 @@ extension DatabaseManager {
             }
             let conversations: [Conversation] = value.compactMap { dictionary in
                 guard let conversationId = dictionary["id"] as? String,
-                      let name = dictionary["name"] as? String,
+                      let receiverName = dictionary["receiver_name"] as? String,
                       let receiverEmail = dictionary["receiver_email"] as? String,
                       let receiverUID = dictionary["receiver_uid"] as? String,
                       let latestMessage = dictionary["latest_message"] as? [String: Any],
@@ -227,7 +227,7 @@ extension DatabaseManager {
                           return nil
                       }
                 let latestMessageObject = LatestMessage(date: date, message: message, isRead: isRead)
-                return Conversation(id: conversationId, name: name, receiverEmail: receiverEmail, receiverUID: receiverUID, latestMessage: latestMessageObject)
+                return Conversation(id: conversationId, receiverName: receiverName, receiverEmail: receiverEmail, receiverUID: receiverUID, latestMessage: latestMessageObject)
             }
             completion(.success(conversations))
         }
@@ -241,7 +241,7 @@ extension DatabaseManager {
                 return
             }
             let messages: [Message] = value.compactMap { dictionary in
-                guard let name = dictionary["name"] as? String,
+                guard let senderName = dictionary["sender_name"] as? String,
                       let isRead = dictionary["is_read"] as? Bool,
                       let messageId = dictionary["id"] as? String,
                       let content = dictionary["content"] as? String,
@@ -251,7 +251,7 @@ extension DatabaseManager {
                       let date = ChatViewController.dateFormatter.date(from: dateString) else {
                           return nil
                       }
-                let sender = Sender(senderId: senderEmail, displayName: name, photoURL: "")
+                let sender = Sender(senderId: senderEmail, displayName: senderName, photoURL: "")
                 return Message(sender: sender, messageId: messageId, sentDate: date, kind: .text(content))
             }
             completion(.success(messages))
@@ -259,8 +259,70 @@ extension DatabaseManager {
     }
     
     /// Send a message with target conversation and message
-    public func sendMessage(to conversation: String, message: Message, completion: @escaping (Bool) -> Void) {
+    public func sendMessage(to conversationId: String, message: Message, completion: @escaping (Bool) -> Void) {
+        //add new message to messages
+        // update sender latest message
+        // update recepient latest message
         
+        guard let senderEmail = getCurrentUser()?.email,
+              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+                  return
+              }
+        
+        let messageDate = message.sentDate
+        let dateString = ChatViewController.dateFormatter.string(from: messageDate)
+        
+        var newMessage = ""
+        switch message.kind {
+        case .text(let textMessage):
+            newMessage = textMessage
+        case .attributedText(_):
+            break
+        case .photo(_):
+            break
+        case .video(_):
+            break
+        case .location(_):
+            break
+        case .emoji(_):
+            break
+        case .audio(_):
+            break
+        case .contact(_):
+            break
+        case .linkPreview(_):
+            break
+        case .custom(_):
+            break
+        }
+        
+        let messageEntry: [String: Any] = [
+            "id": message.messageId,
+            "type": message.kind.string,
+            "content": newMessage,
+            "date": dateString,
+            "sender_email": senderEmail,
+            "sender_name": senderName,
+            "is_read": false
+        ]
+        
+        let ref = database.child("\(conversationId)/messages")
+        
+        ref.observeSingleEvent(of: .value) { [weak ref] snapshot in
+            guard let ref = ref,
+                  var currentMessage = snapshot.value as? [[String: Any]] else {
+                      completion(false)
+                      return
+                  }
+            currentMessage.append(messageEntry)
+            ref.setValue(currentMessage) { error, _ in
+                guard error == nil else {
+                    completion(false)
+                    return
+                }
+                completion(true)
+            }
+        }
     }
     
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
@@ -307,7 +369,7 @@ extension DatabaseManager {
             "content": newMessage,
             "date": dateString,
             "sender_email": senderEmail,
-            "name": senderName,
+            "sender_name": senderName,
             "is_read": false
         ]
         let value: [String: Any] = [
