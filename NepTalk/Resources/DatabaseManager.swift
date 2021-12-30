@@ -259,12 +259,13 @@ extension DatabaseManager {
     }
     
     /// Send a message with target conversation and message
-    public func sendMessage(to conversationId: String, message: Message, completion: @escaping (Bool) -> Void) {
+    public func sendMessage(to conversationId: String, receiverUID: String, message: Message, completion: @escaping (Bool) -> Void) {
         //add new message to messages
         // update sender latest message
         // update recepient latest message
         
         guard let senderEmail = getCurrentUser()?.email,
+              let senderUID = getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
                   return
               }
@@ -306,10 +307,16 @@ extension DatabaseManager {
             "is_read": false
         ]
         
+        let latestMessage: [String: Any] = [
+            "date": dateString,
+            "message": newMessage,
+            "is_read": false
+        ]
+        
         let ref = database.child("\(conversationId)/messages")
         
-        ref.observeSingleEvent(of: .value) { [weak ref] snapshot in
-            guard let ref = ref,
+        ref.observeSingleEvent(of: .value) { [weak self] snapshot in
+            guard let self = self,
                   var currentMessage = snapshot.value as? [[String: Any]] else {
                       completion(false)
                       return
@@ -320,7 +327,44 @@ extension DatabaseManager {
                     completion(false)
                     return
                 }
-                completion(true)
+                
+                let senderNodeRef = self.database.child("\(senderUID)/conversations")
+                let receiverNodeRef = self.database.child("\(receiverUID)/conversations")
+                
+                senderNodeRef.observeSingleEvent(of: .value) { snapshot in
+                    guard var value = snapshot.value as? [[String: Any]] else {
+                        completion(false)
+                        return
+                    }
+                    
+                    if let row = value.firstIndex(where: {$0["id"] as? String == conversationId}) {
+                        value[row]["latest_message"] = latestMessage
+                        senderNodeRef.setValue(value) { error, _ in
+                            guard error == nil else {
+                                completion(false)
+                                return
+                            }
+                            
+                            receiverNodeRef.observeSingleEvent(of: .value) { snapshot in
+                                guard var value = snapshot.value as? [[String: Any]] else {
+                                    completion(false)
+                                    return
+                                }
+                                
+                                if let row = value.firstIndex(where: {$0["id"] as? String == conversationId}) {
+                                    value[row]["latest_message"] = latestMessage
+                                    receiverNodeRef.setValue(value) { error, _ in
+                                        guard error == nil else {
+                                            completion(false)
+                                            return
+                                        }
+                                        completion(true)
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
     }

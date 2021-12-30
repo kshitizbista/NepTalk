@@ -116,7 +116,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        let userResult = UserResult(uid: model.receiverEmail, email: model.receiverEmail, name: model.receiverName)
+        let userResult = UserResult(uid: model.receiverUID, email: model.receiverEmail, name: model.receiverName)
         let vc = ChatViewController(with:userResult, id: model.id)
         vc.title = model.receiverName
         vc.navigationItem.largeTitleDisplayMode = .never
