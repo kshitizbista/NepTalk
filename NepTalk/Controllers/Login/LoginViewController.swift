@@ -154,8 +154,8 @@ class LoginViewController: UIViewController {
                 switch result {
                 case .success(let data):
                     if let userData = data as? [String: Any]  {
-                        let firstName = (userData["first_name"] as? String) ?? ""
-                        let lastName = (userData["last_name"] as? String) ?? ""
+                        let firstName = (userData["firstName"] as? String) ?? ""
+                        let lastName = (userData["lastName"] as? String) ?? ""
                         UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
                     }
                 case .failure(let error):
