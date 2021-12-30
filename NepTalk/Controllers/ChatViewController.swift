@@ -59,18 +59,19 @@ class ChatViewController: MessagesViewController {
         return formatter
     }()
     public var isNewConversation = false
-    private let userResult: UserResult
+    private let receipentUser: UserResult
     private let conversationId: String?
     private var messages = [Message]()
     private var selfSender: Sender? {
-        guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
-            return nil
-        }
-        return Sender(senderId:email, displayName: "Me", photoURL: "")
+        guard let email = DatabaseManager.shared.getCurrentUser()?.email,
+              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+                  return nil
+              }
+        return Sender(senderId:email, displayName: senderName, photoURL: "")
     }
     
     init(with: UserResult, id: String?) {
-        self.userResult = with
+        self.receipentUser = with
         self.conversationId = id
         super.init(nibName: nil, bundle: nil)
     }
@@ -135,28 +136,38 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
 }
 
 extension ChatViewController: InputBarAccessoryViewDelegate {
+    
     func inputBar(_ inputBar: InputBarAccessoryView, didPressSendButtonWith text: String) {
         guard !text.replacingOccurrences(of: " ", with: "").isEmpty, let selfSender = selfSender, let messageId = createMessageId() else {
             return
         }
         // send message
+        let message = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
         if isNewConversation {
             //create convo in database
-            let message = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
-            DatabaseManager.shared.createConversation(with: userResult.email, receiverUID: userResult.uid, receiverName: userResult.name, message: message) { success in
+            DatabaseManager.shared.createConversation(with: receipentUser.email, receiverUID: receipentUser.uid, receiverName: receipentUser.name, message: message) { [weak self] success in
                 if success {
                     print("message sent")
-                }else {
+                    self?.isNewConversation = false
+                } else {
                     print("failed to send message")
                 }
             }
         } else {
-            // append tp existing conversation data
+            // append to existing conversation data
+            guard let conversationId = conversationId else { return }
+            DatabaseManager.shared.sendMessage(to: conversationId, receiverUID: receipentUser.uid, message: message) { success in
+                if success {
+                    print("message sent")
+                } else {
+                    print("failed to send")
+                }
+            }
         }
     }
     
     private func createMessageId() -> String? {
-        let receiverUID = userResult.uid
+        let receiverUID = receipentUser.uid
         let currentUserUID = DatabaseManager.shared.getCurrentUser()!.uid
         let dateString = Self.dateFormatter.string(from: Date())
         let newIdentifier = "\(receiverUID)_\(currentUserUID)_\(dateString)"

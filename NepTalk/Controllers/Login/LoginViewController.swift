@@ -150,7 +150,18 @@ class LoginViewController: UIViewController {
                 self.alertUserLoginError(message: error.localizedDescription)
                 return
             }
-            UserDefaults.standard.set(email, forKey: "email")
+            DatabaseManager.shared.getDataFor(path: authResult!.user.uid) { result in
+                switch result {
+                case .success(let data):
+                    if let userData = data as? [String: Any]  {
+                        let firstName = (userData["first_name"] as? String) ?? ""
+                        let lastName = (userData["last_name"] as? String) ?? ""
+                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                    }
+                case .failure(let error):
+                    print("Failed toread data with error \(error)")
+                }
+            }
             (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
         }
     }
@@ -204,11 +215,11 @@ extension LoginViewController: LoginButtonDelegate {
                         return
                     }
                     if let email = fbResult["email"] as? String {
-                        let firstName = fbResult["first_name"] as? String
-                        let lastName = fbResult["last_name"] as? String
-                        UserDefaults.standard.set(email, forKey: "email")
+                        let firstName = (fbResult["first_name"] as? String) ?? ""
+                        let lastName = (fbResult["last_name"] as? String) ?? ""
+                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
                         DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
-                            let appUser = AppUser(uid: authResult.user.uid,firstName: firstName ?? "", lastName: lastName ?? "", email: email)
+                            let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
                             if !exists {
                                 DatabaseManager.shared.insertUser(with: appUser) { success in
                                     if success, let picture = fbResult["picture"] as? [String: Any],
@@ -280,7 +291,7 @@ extension LoginViewController {
                         let email = userProfile.email
                         let firstName = userProfile.givenName ?? ""
                         let lastName = userProfile.familyName ?? ""
-                        UserDefaults.standard.set(email, forKey: "email")
+                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
                         DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             if !exists {
                                 let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)

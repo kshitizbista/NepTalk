@@ -179,7 +179,7 @@ class RegisterViewController: UIViewController {
                 self.alertUserLoginError(message: error?.localizedDescription)
                 return
             }
-            UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
             let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email)
             DatabaseManager.shared.insertUser(with: appUser) { success in
                 if success {
