@@ -9,46 +9,6 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 
-struct Message: MessageType {
-    var sender: SenderType
-    var messageId: String
-    var sentDate: Date
-    var kind: MessageKind
-}
-
-extension MessageKind {
-    var string: String {
-        switch self {
-        case .text(_):
-            return "text"
-        case .attributedText(_):
-            return "attributed_text"
-        case .photo(_):
-            return "photo"
-        case .video(_):
-            return "media_item"
-        case .location(_):
-            return "location_item"
-        case .emoji(_):
-            return "emoji"
-        case .audio(_):
-            return "audio_item"
-        case .contact(_):
-            return "contact_item"
-        case .linkPreview(_):
-            return "link_item"
-        case .custom(_):
-            return "custom"
-        }
-    }
-}
-
-struct Sender: SenderType {
-    var senderId: String
-    var displayName: String
-    var photoURL: String
-}
-
 class ChatViewController: MessagesViewController {
     
     public static let dateFormatter: DateFormatter = {

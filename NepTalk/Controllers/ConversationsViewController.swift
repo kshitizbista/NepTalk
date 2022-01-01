@@ -8,20 +8,6 @@
 import UIKit
 import JGProgressHUD
 
-struct Conversation {
-    let id: String
-    let receiverName: String
-    let receiverEmail: String
-    let receiverUID: String
-    let latestMessage: LatestMessage
-}
-
-struct LatestMessage {
-    let date: String
-    let message: String
-    let isRead: Bool
-}
-
 class ConversationsViewController: UIViewController {
     
     private var conversations = [Conversation]()
