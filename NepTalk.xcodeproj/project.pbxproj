@@ -9,9 +9,6 @@
 /* Begin PBXBuildFile section */
 		2C5A63D05120A3553083327B /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87D6BF1B346262A76D21B3AF /* Pods_NepTalk.framework */; };
 		390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E79B3275928BC00B31FAE /* DatabaseManager.swift */; };
-		391FB294278076D10078A6A3 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB293278076D10078A6A3 /* AppUser.swift */; };
-		391FB296278077480078A6A3 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB295278077480078A6A3 /* Conversation.swift */; };
-		391FB2982780780A0078A6A3 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2972780780A0078A6A3 /* Message.swift */; };
 		3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */; };
 		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
@@ -50,9 +47,6 @@
 
 /* Begin PBXFileReference section */
 		390E79B3275928BC00B31FAE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
-		391FB293278076D10078A6A3 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = SOURCE_ROOT; };
-		391FB295278077480078A6A3 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = SOURCE_ROOT; };
-		391FB2972780780A0078A6A3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = SOURCE_ROOT; };
 		3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		39920D6C275810E90066EA77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -174,9 +168,6 @@
 		39B7896E27429720009D9B6E /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				391FB293278076D10078A6A3 /* AppUser.swift */,
-				391FB295278077480078A6A3 /* Conversation.swift */,
-				391FB2972780780A0078A6A3 /* Message.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -405,15 +396,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				39B789732742994C009D9B6E /* LoginViewController.swift in Sources */,
-				391FB294278076D10078A6A3 /* AppUser.swift in Sources */,
 				390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */,
-				391FB2982780780A0078A6A3 /* Message.swift in Sources */,
 				39B7897527429962009D9B6E /* RegisterViewController.swift in Sources */,
 				39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */,
 				39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */,
 				39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */,
 				39E294022754200900D57C42 /* Extension.swift in Sources */,
-				391FB296278077480078A6A3 /* Conversation.swift in Sources */,
 				39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */,
 				39B7897D274299DC009D9B6E /* ProfileViewController.swift in Sources */,
 				39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */,
