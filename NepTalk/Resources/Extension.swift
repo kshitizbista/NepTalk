@@ -7,7 +7,6 @@
 
 import Foundation
 import UIKit
-import MessageKit
 
 extension UIView {
     
@@ -33,32 +32,5 @@ extension UIView {
     
     public var right: CGFloat {
         return self.frame.origin.x + self.frame.size.width
-    }
-}
-
-extension MessageKind {
-    var string: String {
-        switch self {
-        case .text(_):
-            return "text"
-        case .attributedText(_):
-            return "attributed_text"
-        case .photo(_):
-            return "photo"
-        case .video(_):
-            return "media_item"
-        case .location(_):
-            return "location_item"
-        case .emoji(_):
-            return "emoji"
-        case .audio(_):
-            return "audio_item"
-        case .contact(_):
-            return "contact_item"
-        case .linkPreview(_):
-            return "link_item"
-        case .custom(_):
-            return "custom"
-        }
     }
 }
