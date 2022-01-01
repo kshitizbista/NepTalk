@@ -23,7 +23,7 @@ class LoginViewController: UIViewController {
     
     private let imageView: UIImageView = {
         let imageView = UIImageView()
-        imageView.image = UIImage(named: "logo")
+        imageView.image = UIImage(named: K.logoName)
         imageView.contentMode = .scaleAspectFit
         return imageView
     }()
@@ -62,7 +62,7 @@ class LoginViewController: UIViewController {
     private let loginButton: UIButton = {
         let button = UIButton()
         button.setTitle("Log In", for: .normal)
-        button.backgroundColor = UIColor(named: "brand-blue")
+        button.backgroundColor = UIColor(named: K.BrandColor.blue)
         button.setTitleColor(.white, for: .normal)
         button.layer.cornerRadius = 12
         button.layer.masksToBounds = true

@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		2C5A63D05120A3553083327B /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87D6BF1B346262A76D21B3AF /* Pods_NepTalk.framework */; };
 		390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E79B3275928BC00B31FAE /* DatabaseManager.swift */; };
+		391FB2AC27808E8C0078A6A3 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AB27808E8C0078A6A3 /* Message.swift */; };
+		391FB2AE27808EA10078A6A3 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AD27808EA10078A6A3 /* Conversation.swift */; };
+		391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AF27808EB00078A6A3 /* AppUser.swift */; };
+		391FB2B22780901B0078A6A3 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2B12780901B0078A6A3 /* Constant.swift */; };
 		3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */; };
 		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
@@ -47,6 +51,10 @@
 
 /* Begin PBXFileReference section */
 		390E79B3275928BC00B31FAE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		391FB2AB27808E8C0078A6A3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
+		391FB2AD27808EA10078A6A3 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
+		391FB2AF27808EB00078A6A3 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
+		391FB2B12780901B0078A6A3 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		39920D6C275810E90066EA77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,6 +115,16 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		391FB2AA27808E4D0078A6A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				391FB2AB27808E8C0078A6A3 /* Message.swift */,
+				391FB2AD27808EA10078A6A3 /* Conversation.swift */,
+				391FB2AF27808EB00078A6A3 /* AppUser.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		39B7893027429258009D9B6E = {
 			isa = PBXGroup;
 			children = (
@@ -130,9 +148,8 @@
 		39B7893B27429258009D9B6E /* NepTalk */ = {
 			isa = PBXGroup;
 			children = (
+				391FB2AA27808E4D0078A6A3 /* Models */,
 				39B789702742972F009D9B6E /* Resources */,
-				39B7896F27429726009D9B6E /* ViewModels */,
-				39B7896E27429720009D9B6E /* Models */,
 				39B7896D27429719009D9B6E /* Views */,
 				39B7896C2742970E009D9B6E /* Controllers */,
 				39B7894A27429259009D9B6E /* Info.plist */,
@@ -165,20 +182,6 @@
 			path = Views;
 			sourceTree = "<group>";
 		};
-		39B7896E27429720009D9B6E /* Models */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Models;
-			sourceTree = "<group>";
-		};
-		39B7896F27429726009D9B6E /* ViewModels */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = ViewModels;
-			sourceTree = "<group>";
-		};
 		39B789702742972F009D9B6E /* Resources */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,6 +190,7 @@
 				39E294012754200900D57C42 /* Extension.swift */,
 				390E79B3275928BC00B31FAE /* DatabaseManager.swift */,
 				39B94A0A276F6835005A7CA9 /* StorageManager.swift */,
+				391FB2B12780901B0078A6A3 /* Constant.swift */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -402,11 +406,15 @@
 				39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */,
 				39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */,
 				39E294022754200900D57C42 /* Extension.swift in Sources */,
+				391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */,
 				39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */,
+				391FB2AE27808EA10078A6A3 /* Conversation.swift in Sources */,
 				39B7897D274299DC009D9B6E /* ProfileViewController.swift in Sources */,
+				391FB2B22780901B0078A6A3 /* Constant.swift in Sources */,
 				39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */,
 				3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */,
 				39C6545A276BC41B00C63850 /* ChatViewController.swift in Sources */,
+				391FB2AC27808E8C0078A6A3 /* Message.swift in Sources */,
 				39B78977274299A0009D9B6E /* PhotoViewerViewController.swift in Sources */,
 				39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */,
 			);

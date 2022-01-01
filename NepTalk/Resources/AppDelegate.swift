@@ -20,7 +20,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
             appearance.configureWithOpaqueBackground()
             UINavigationBar.appearance().standardAppearance = appearance
             UINavigationBar.appearance().scrollEdgeAppearance = appearance
-            UINavigationBar.appearance().tintColor = UIColor(named: "brand-blue")
+            UINavigationBar.appearance().tintColor = UIColor(named: K.BrandColor.blue)
         }
         FirebaseApp.configure()
         return true
