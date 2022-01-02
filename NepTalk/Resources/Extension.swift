@@ -40,25 +40,25 @@ extension MessageKind {
     var string: String {
         switch self {
         case .text(_):
-            return "text"
+            return K.MessageKindString.text
         case .attributedText(_):
-            return "attributed_text"
+            return K.MessageKindString.attributedText
         case .photo(_):
-            return "photo"
+            return K.MessageKindString.photo
         case .video(_):
-            return "media_item"
+            return K.MessageKindString.video
         case .location(_):
-            return "location_item"
+            return K.MessageKindString.locationItem
         case .emoji(_):
-            return "emoji"
+            return K.MessageKindString.emoji
         case .audio(_):
-            return "audio_item"
+            return K.MessageKindString.audioItem
         case .contact(_):
-            return "contact_item"
+            return K.MessageKindString.contactItem
         case .linkPreview(_):
-            return "link_item"
+            return K.MessageKindString.linkItem
         case .custom(_):
-            return "custom"
+            return K.MessageKindString.custom
         }
     }
 }

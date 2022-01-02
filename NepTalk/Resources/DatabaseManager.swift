@@ -8,6 +8,7 @@
 import Foundation
 import FirebaseDatabase
 import FirebaseAuth
+import MessageKit
 
 final class DatabaseManager {
     
@@ -247,12 +248,30 @@ extension DatabaseManager {
                       let content = dictionary["content"] as? String,
                       let senderEmail = dictionary["sender_email"] as? String,
                       let dateString = dictionary["date"] as? String,
-                      let type = dictionary["type"],
+                      let type = dictionary["type"] as? String,
                       let date = ChatViewController.dateFormatter.date(from: dateString) else {
                           return nil
                       }
+                
+                var kind: MessageKind?
+                switch type {
+                case K.MessageKindString.photo:
+                    guard let imageUrl = URL(string: content),
+                          let placeholder = UIImage(systemName: "photo") else {
+                              return nil
+                          }
+                    let media = Media(url: imageUrl, image: nil, placeholderImage: placeholder, size: CGSize(width: 300, height: 300))
+                    kind = .photo(media)
+                case K.MessageKindString.text:
+                    kind = .text(content)
+                default:
+                    break
+                }
+                
+                guard let kind = kind else { return nil }
+                
                 let sender = Sender(senderId: senderEmail, displayName: senderName, photoURL: "")
-                return Message(sender: sender, messageId: messageId, sentDate: date, kind: .text(content))
+                return Message(sender: sender, messageId: messageId, sentDate: date, kind: kind)
             }
             completion(.success(messages))
         }
@@ -279,8 +298,8 @@ extension DatabaseManager {
             newMessage = textMessage
         case .attributedText(_):
             break
-        case .photo(_):
-            break
+        case .photo(let mediaItem):
+            newMessage = mediaItem.url!.absoluteString
         case .video(_):
             break
         case .location(_):

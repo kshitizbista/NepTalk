@@ -21,3 +21,10 @@ struct Sender: SenderType {
     var displayName: String
     var photoURL: String
 }
+
+struct Media: MediaItem {
+    var url: URL?
+    var image: UIImage?
+    var placeholderImage: UIImage
+    var size: CGSize
+}
