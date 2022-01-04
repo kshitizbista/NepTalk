@@ -62,3 +62,20 @@ extension MessageKind {
         }
     }
 }
+
+extension DateFormatter {
+   static let en_US_POSIX: DateFormatter = {
+       let formatter = DateFormatter()
+       formatter.dateStyle = .medium
+       formatter.timeStyle = .long
+       formatter.locale = Locale(identifier: "en_US_POSIX")
+       return formatter
+   }()
+}
+
+
+extension Date {
+    static func formatToString(using formatter: DateFormatter, from date: Date) -> String {
+      return formatter.string(from: date)
+   }
+}

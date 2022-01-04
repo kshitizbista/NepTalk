@@ -123,7 +123,7 @@ extension DatabaseManager {
         let senderRef = database.child("\(senderUID)/conversations")
         let receiverRef = database.child("\(receiverUID)/conversations")
         let messageDate = message.sentDate
-        let dateString = ChatViewController.dateFormatter.string(from: messageDate)
+        let dateString = Date.formatToString(using: .en_US_POSIX, from: messageDate)
         
         var newMessage = ""
         switch message.kind {
@@ -241,6 +241,7 @@ extension DatabaseManager {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
             }
+    
             let messages: [Message] = value.compactMap { dictionary in
                 guard let senderName = dictionary["sender_name"] as? String,
                       let isRead = dictionary["is_read"] as? Bool,
@@ -249,7 +250,7 @@ extension DatabaseManager {
                       let senderEmail = dictionary["sender_email"] as? String,
                       let dateString = dictionary["date"] as? String,
                       let type = dictionary["type"] as? String,
-                      let date = ChatViewController.dateFormatter.date(from: dateString) else {
+                      let date = DateFormatter.en_US_POSIX.date(from: dateString) else {
                           return nil
                       }
                 
@@ -262,9 +263,18 @@ extension DatabaseManager {
                           }
                     let media = Media(url: imageUrl, image: nil, placeholderImage: placeholder, size: CGSize(width: 300, height: 300))
                     kind = .photo(media)
-                case K.MessageKindString.text:
-                    kind = .text(content)
+                case K.MessageKindString.video:
+                    // TODO: Add video thumbnail instead of SF symbol
+                    // https://stackoverflow.com/questions/31779150/creating-thumbnail-from-local-video-in-swift/31779221
+                    // https://medium.com/@PaulWall43/generating-video-thumnails-at-runtime-in-ios-swift-a2b092301c9a
+                    guard let videoUrl = URL(string: content),
+                          let placeholder = UIImage(systemName: "video.fill") else {
+                              return nil
+                          }
+                    let media = Media(url: videoUrl, image: nil, placeholderImage: placeholder, size: CGSize(width: 200, height: 200))
+                    kind = .video(media)
                 default:
+                    kind = .text(content)
                     break
                 }
                 
@@ -290,7 +300,7 @@ extension DatabaseManager {
               }
         
         let messageDate = message.sentDate
-        let dateString = ChatViewController.dateFormatter.string(from: messageDate)
+        let dateString = Date.formatToString(using: .en_US_POSIX, from: messageDate)
         
         var newMessage = ""
         switch message.kind {
@@ -300,8 +310,8 @@ extension DatabaseManager {
             break
         case .photo(let mediaItem):
             newMessage = mediaItem.url!.absoluteString
-        case .video(_):
-            break
+        case .video(let mediaItem):
+            newMessage = mediaItem.url!.absoluteString
         case .location(_):
             break
         case .emoji(_):
@@ -399,8 +409,7 @@ extension DatabaseManager {
     }
     
     private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Bool) -> Void ) {
-        let messageDate = message.sentDate
-        let dateString = ChatViewController.dateFormatter.string(from: messageDate)
+        let dateString = Date.formatToString(using: .en_US_POSIX, from: message.sentDate)
         
         var newMessage = ""
         switch message.kind {
