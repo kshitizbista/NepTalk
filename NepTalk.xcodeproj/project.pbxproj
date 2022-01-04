@@ -13,6 +13,7 @@
 		391FB2AE27808EA10078A6A3 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AD27808EA10078A6A3 /* Conversation.swift */; };
 		391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AF27808EB00078A6A3 /* AppUser.swift */; };
 		391FB2B22780901B0078A6A3 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2B12780901B0078A6A3 /* Constant.swift */; };
+		3963DE7C2784863500579821 /* NewConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3963DE7B2784863500579821 /* NewConversationTableViewCell.swift */; };
 		3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */; };
 		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
@@ -55,6 +56,7 @@
 		391FB2AD27808EA10078A6A3 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
 		391FB2AF27808EB00078A6A3 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
 		391FB2B12780901B0078A6A3 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
+		3963DE7B2784863500579821 /* NewConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationTableViewCell.swift; sourceTree = "<group>"; };
 		3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
 		39920D6C275810E90066EA77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -178,6 +180,7 @@
 				39B7897127429783009D9B6E /* Storyboards */,
 				39B7894527429259009D9B6E /* Assets.xcassets */,
 				3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */,
+				3963DE7B2784863500579821 /* NewConversationTableViewCell.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -406,6 +409,7 @@
 				39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */,
 				39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */,
 				39E294022754200900D57C42 /* Extension.swift in Sources */,
+				3963DE7C2784863500579821 /* NewConversationTableViewCell.swift in Sources */,
 				391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */,
 				39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */,
 				391FB2AE27808EA10078A6A3 /* Conversation.swift in Sources */,
