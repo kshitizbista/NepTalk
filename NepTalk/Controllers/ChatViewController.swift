@@ -75,7 +75,6 @@ class ChatViewController: MessagesViewController {
             
         }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        
         present(actionSheet, animated: true)
     }
     
@@ -95,10 +94,7 @@ class ChatViewController: MessagesViewController {
             picker.allowsEditing = true
             self?.present(picker, animated: true)
         }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel, handler: { _ in
-            
-        }))
-        
+        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(actionSheet, animated: true)
     }
     
@@ -200,7 +196,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         let message = Message(sender: selfSender, messageId: createMessageId(), sentDate: Date(), kind: .text(text))
         if isNewConversation {
             //create convo in database
-            DatabaseManager.shared.createConversation(with: receipentUser.email, receiverUID: receipentUser.uid, receiverName: receipentUser.name, message: message) { [weak self] success in
+            DatabaseManager.shared.createConversation(with: receipentUser, message: message) { [weak self] success in
                 if success {
                     print("message sent")
                     self?.isNewConversation = false
@@ -211,7 +207,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         } else {
             // append to existing conversation data
             guard let conversationId = conversationId else { return }
-            DatabaseManager.shared.sendMessage(to: conversationId, receiverUID: receipentUser.uid, message: message) { success in
+            DatabaseManager.shared.sendMessage(to: conversationId, receiver: receipentUser, message: message) { success in
                 if success {
                     print("message sent")
                 } else {
@@ -235,7 +231,6 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
               }
         if let image = info[.editedImage] as? UIImage,
            let imageData = image.pngData() {
-            
             let fileName = "photo_message_\(createMessageId().replacingOccurrences(of: " ", with: "-")).png"
             StorageManager.shared.uploadMessagePhoto(with: imageData, fileName: fileName) { [weak self] result in
                 guard let self = self else { return }
@@ -247,7 +242,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                         let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
                         let message = Message(sender: selfSender, messageId: self.createMessageId(), sentDate: Date(), kind: .photo(media))
                         
-                        DatabaseManager.shared.sendMessage(to: conversationId, receiverUID: self.receipentUser.uid, message: message) { success in
+                        DatabaseManager.shared.sendMessage(to: conversationId, receiver: self.receipentUser, message: message) { success in
                             if success {
                                 print("message sent")
                             } else {
@@ -273,7 +268,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                         let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
                         let message = Message(sender: selfSender, messageId: self.createMessageId(), sentDate: Date(), kind: .video(media))
                         
-                        DatabaseManager.shared.sendMessage(to: conversationId, receiverUID: self.receipentUser.uid, message: message) { success in
+                        DatabaseManager.shared.sendMessage(to: conversationId, receiver: self.receipentUser, message: message) { success in
                             if success {
                                 print("message sent")
                             } else {
