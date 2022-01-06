@@ -71,18 +71,44 @@ class ConversationsViewController: UIViewController {
     @objc private func didTapComposeButton() {
         let vc = NewConversationViewController()
         vc.completion = { [weak self] result in
-            self?.createNewConversation(result: result)
+            guard let self = self else {
+                return
+            }
+            if let targetConversation = self.conversations.first(where: {$0.receiverUID == result.uid}) {
+                let vc = ChatViewController(with: result, id: targetConversation.id)
+                vc.isNewConversation = false
+                vc.title = targetConversation.receiverName
+                vc.navigationItem.largeTitleDisplayMode = .never
+                self.navigationController?.pushViewController(vc, animated: false)
+            } else {
+                self.createNewConversation(userResult: result)
+            }
+           
         }
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
     
-    private func createNewConversation(result: UserResult) {
-        let vc = ChatViewController(with: result, id: nil)
-        vc.isNewConversation = true
-        vc.title = result.name
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: false)
+    private func createNewConversation(userResult: UserResult) {
+        DatabaseManager.shared.conversationExists(with: userResult.uid) { [weak self] result in
+            guard let self = self else {
+                return
+            }
+            switch result {
+            case .success(let conversationId):
+                let vc = ChatViewController(with: userResult, id: conversationId)
+                vc.isNewConversation = false
+                vc.title = userResult.name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                self.navigationController?.pushViewController(vc, animated: false)
+            case .failure(_):
+                let vc = ChatViewController(with: userResult, id: nil)
+                vc.isNewConversation = true
+                vc.title = userResult.name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                self.navigationController?.pushViewController(vc, animated: false)
+            }
+        }
     }
 }
 
@@ -102,15 +128,36 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
+        openConversation(model)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        return 120
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            tableView.beginUpdates()
+            let conversationId = conversations[indexPath.row].id
+            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
+                if success {
+                    self?.conversations.remove(at: indexPath.row)
+                    tableView.deleteRows(at: [indexPath], with: .left)
+                }
+            }
+            tableView.endUpdates()
+        }
+    }
+    
+    func openConversation(_ model: Conversation) {
         let userResult = UserResult(uid: model.receiverUID, email: model.receiverEmail, name: model.receiverName)
         let vc = ChatViewController(with:userResult, id: model.id)
         vc.title = model.receiverName
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }
-    
-    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 120
-    }
 }
-
