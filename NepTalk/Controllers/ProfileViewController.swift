@@ -8,16 +8,35 @@
 import UIKit
 import FirebaseAuth
 import FBSDKLoginKit
+import SDWebImage
 
 class ProfileViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     
-    let data = ["Log Out"]
+    var data = [ProfileViewModel]()
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: "cell")
+        tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
+        data.append(ProfileViewModel(type: .info, title: "Name: \(UserDefaults.standard.value(forKey: "name") ?? "No Name")"))
+        data.append(ProfileViewModel(type: .info, title: "Email: \(DatabaseManager.shared.getCurrentUser()?.email ?? "No Email")"))
+        data.append(ProfileViewModel(type: .logout, title: "Log Out", handler: { [weak self] in
+            guard let self = self else { return }
+            let actionSheet = UIAlertController(title: "Do you want to log out ?", message: "", preferredStyle: .actionSheet)
+            actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: {_ in
+                FBSDKLoginKit.LoginManager().logOut()
+                do {
+                    try Auth.auth().signOut()
+                } catch {
+                    print("Failed to log out")
+                    print(error)
+                }
+                (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "LoginNavigationController")
+            }))
+            actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+            self.present(actionSheet, animated: true)
+        }))
         tableView.tableHeaderView = createTableHeader()
         tableView.delegate = self
         tableView.dataSource = self
@@ -38,28 +57,18 @@ class ProfileViewController: UIViewController {
         
         let uid = DatabaseManager.shared.getCurrentUser()!.uid
         let path = "images/\(uid)_profile_pic.png"
-        StorageManager.shared.downloadURL(for: path) { [weak self] result in
+        StorageManager.shared.downloadURL(for: path) { result in
             switch result {
             case .success(let url):
-                self?.downloadImage(imageView: imageView, url: url)
+                DispatchQueue.main.async {
+                    imageView.sd_setImage(with: url, completed: nil)
+                }
             case .failure(let error):
                 print("Failed to get download url:\(error)")
             }
         }
         
         return headerView
-    }
-    
-    func downloadImage(imageView: UIImageView, url: URL) {
-        URLSession.shared.dataTask(with: url) { data, _, error in
-            guard let data = data, error == nil else {
-                return
-            }
-            DispatchQueue.main.async {
-                let image = UIImage(data: data)
-                imageView.image = image
-            }
-        }.resume()
     }
 }
 
@@ -70,28 +79,14 @@ extension ProfileViewController: UITableViewDelegate, UITableViewDataSource {
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath)
-        cell.textLabel?.text = data[indexPath.row]
-        cell.textLabel?.textAlignment = .center
-        cell.textLabel?.textColor = .red
+        let viewModel = data[indexPath.row]
+        let cell = tableView.dequeueReusableCell(withIdentifier: ProfileTableViewCell.identifier, for: indexPath) as! ProfileTableViewCell
+        cell.configure(with: viewModel)
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        
-        let actionSheet = UIAlertController(title: "Do you want to log out ?", message: "", preferredStyle: .actionSheet)
-        actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: {_ in
-            FBSDKLoginKit.LoginManager().logOut()
-            do {
-                try Auth.auth().signOut()
-            } catch {
-                print("Failed to log out")
-                print(error)
-            }
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "LoginNavigationController")
-        }))
-        actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
-        present(actionSheet, animated: true)
+        data[indexPath.row].handler?()
     }
 }
