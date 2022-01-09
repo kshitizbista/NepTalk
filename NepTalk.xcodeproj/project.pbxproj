@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C5A63D05120A3553083327B /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87D6BF1B346262A76D21B3AF /* Pods_NepTalk.framework */; };
+		390B5295278B0F8E002EE4BD /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */; };
 		390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E79B3275928BC00B31FAE /* DatabaseManager.swift */; };
 		391FB2AC27808E8C0078A6A3 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AB27808E8C0078A6A3 /* Message.swift */; };
 		391FB2AE27808EA10078A6A3 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AD27808EA10078A6A3 /* Conversation.swift */; };
@@ -51,6 +52,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
 		390E79B3275928BC00B31FAE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		391FB2AB27808E8C0078A6A3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		391FB2AD27808EA10078A6A3 /* Conversation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Conversation.swift; sourceTree = "<group>"; };
@@ -170,6 +172,7 @@
 				39B7897A274299C8009D9B6E /* NewConversationViewController.swift */,
 				39B7897C274299DC009D9B6E /* ProfileViewController.swift */,
 				39C65459276BC41B00C63850 /* ChatViewController.swift */,
+				390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -405,6 +408,7 @@
 				39B789732742994C009D9B6E /* LoginViewController.swift in Sources */,
 				390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */,
 				39B7897527429962009D9B6E /* RegisterViewController.swift in Sources */,
+				390B5295278B0F8E002EE4BD /* LocationPickerViewController.swift in Sources */,
 				39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */,
 				39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */,
 				39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */,
