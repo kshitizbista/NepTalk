@@ -52,7 +52,7 @@ class LocationPickerViewController: UIViewController {
             pin.coordinate = coordinates
             map.addAnnotation(pin)
         }
-        
+        tabBarController?.tabBar.isHidden = true
         view.addSubview(map)
     }
     
