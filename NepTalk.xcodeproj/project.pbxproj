@@ -17,8 +17,8 @@
 		391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AF27808EB00078A6A3 /* AppUser.swift */; };
 		391FB2B22780901B0078A6A3 /* Constant.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2B12780901B0078A6A3 /* Constant.swift */; };
 		3963DE7C2784863500579821 /* NewConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3963DE7B2784863500579821 /* NewConversationTableViewCell.swift */; };
+		397BADCF278B9C7600A8CEC2 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 397BADCE278B9C7600A8CEC2 /* GoogleService-Info.plist */; };
 		3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */; };
-		39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 39920D6C275810E90066EA77 /* GoogleService-Info.plist */; };
 		39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893C27429258009D9B6E /* AppDelegate.swift */; };
 		39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7893E27429258009D9B6E /* SceneDelegate.swift */; };
 		39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7894027429258009D9B6E /* ConversationsViewController.swift */; };
@@ -63,8 +63,8 @@
 		391FB2AF27808EB00078A6A3 /* AppUser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppUser.swift; sourceTree = "<group>"; };
 		391FB2B12780901B0078A6A3 /* Constant.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constant.swift; sourceTree = "<group>"; };
 		3963DE7B2784863500579821 /* NewConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationTableViewCell.swift; sourceTree = "<group>"; };
+		397BADCE278B9C7600A8CEC2 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		3991E3092779F5C9005C77F7 /* ConversationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationTableViewCell.swift; sourceTree = "<group>"; };
-		39920D6C275810E90066EA77 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		39B7893927429258009D9B6E /* NepTalk.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NepTalk.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		39B7893C27429258009D9B6E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		39B7893E27429258009D9B6E /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -170,7 +170,7 @@
 				39B7896D27429719009D9B6E /* Views */,
 				39B7896C2742970E009D9B6E /* Controllers */,
 				39B7894A27429259009D9B6E /* Info.plist */,
-				39920D6C275810E90066EA77 /* GoogleService-Info.plist */,
+				397BADCE278B9C7600A8CEC2 /* GoogleService-Info.plist */,
 			);
 			path = NepTalk;
 			sourceTree = "<group>";
@@ -254,6 +254,7 @@
 				39B7893627429258009D9B6E /* Frameworks */,
 				39B7893727429258009D9B6E /* Resources */,
 				CF77D9F347B40865CDF4D993 /* [CP] Embed Pods Frameworks */,
+				3986BC15278B8C1200FE6637 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -350,7 +351,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				39B7894927429259009D9B6E /* LaunchScreen.storyboard in Resources */,
-				39920D6D275810E90066EA77 /* GoogleService-Info.plist in Resources */,
+				397BADCF278B9C7600A8CEC2 /* GoogleService-Info.plist in Resources */,
 				39B7894627429259009D9B6E /* Assets.xcassets in Resources */,
 				39B7894427429258009D9B6E /* Main.storyboard in Resources */,
 			);
@@ -373,6 +374,25 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		3986BC15278B8C1200FE6637 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${DWARF_DSYM_FOLDER_PATH}/${DWARF_DSYM_FILE_NAME}/Contents/Resources/DWARF/${TARGET_NAME}",
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/FirebaseCrashlytics/run\"\n";
+		};
 		546CD05C3AAFAC5AB6908CAD /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -617,6 +637,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = PV48483GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NepTalk/Info.plist;
@@ -649,6 +670,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = PV48483GG2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = NepTalk/Info.plist;
