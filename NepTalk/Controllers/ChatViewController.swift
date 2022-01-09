@@ -9,6 +9,7 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 import AVKit
+import CoreLocation
 
 class ChatViewController: MessagesViewController {
     
@@ -74,8 +75,37 @@ class ChatViewController: MessagesViewController {
         actionSheet.addAction(UIAlertAction(title: "Audio", style: .default, handler: { _ in
             
         }))
+        actionSheet.addAction(UIAlertAction(title: "Location", style: .default, handler: { [weak self] _ in
+            self?.presentLocationPicker()
+        }))
         actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
         present(actionSheet, animated: true)
+    }
+    
+    private func presentLocationPicker() {
+        let vc = LocationPickerViewController()
+        vc.title = "Pick Location"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        vc.completion = { [weak self] selectedCoordinates in
+            guard let self = self,
+                  let selfSender = self.selfSender,
+                  let conversationId = self.conversationId else
+                  {
+                      return
+                  }
+            let longitude: Double = selectedCoordinates.longitude
+            let latitidue: Double = selectedCoordinates.latitude
+            let location = Location(location: CLLocation(latitude: latitidue, longitude: longitude), size: .zero)
+            let message = Message(sender: selfSender, messageId: self.createMessageId(), sentDate: Date(), kind: .location(location))
+            DatabaseManager.shared.sendMessage(to: conversationId, receiver: self.receipentUser, message: message) { success in
+                if success {
+                    print("sent location message")
+                } else {
+                    print("failed to send photo message")
+                }
+            }
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func presentPhotoInputActionSheet() {
@@ -280,7 +310,7 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                 case .failure(let error):
                     print("message video upload error: \(error)")
                 }
-        }
+            }
         }
     }
 }
@@ -300,12 +330,27 @@ extension ChatViewController: MessageCellDelegate {
             guard let videoUrl = media.url else {
                 return
             }
-           let vc = AVPlayerViewController()
+            let vc = AVPlayerViewController()
             
             vc.player = AVPlayer(url: videoUrl)
             present(vc, animated: true) {
                 vc.player?.play()
             }
+        default:
+            break
+        }
+    }
+    
+    func didTapMessage(in cell: MessageCollectionViewCell) {
+        guard let indexPath = messagesCollectionView.indexPath(for: cell) else { return }
+        let message = messages[indexPath.section]
+        switch message.kind {
+        case .location(let locationItem):
+            let coordinates = locationItem.location.coordinate
+            let vc = LocationPickerViewController(coordinates: coordinates)
+            vc.title = "Location"
+            self.navigationController?.pushViewController(vc, animated: true)
+            break
         default:
             break
         }
