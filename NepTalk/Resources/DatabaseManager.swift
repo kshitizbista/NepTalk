@@ -13,18 +13,11 @@ import CoreLocation
 
 final class DatabaseManager {
     
-    private init() {}
     static let shared = DatabaseManager()
     private let database = Database.database().reference()
     
-    static func safeEmail(email: String) -> String {
-        var safeEmail = email.replacingOccurrences(of: ".", with: "-")
-        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
-        return safeEmail
-    }
-    
     public enum DatabaseError: Error {
-        case failedToFetch
+        case failedToFetch, failedToWrite
     }
 }
 
@@ -115,7 +108,7 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     /// Create a new conversation with target user email
-    public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Bool) -> Void) {
+    public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
         guard let senderEmail = getCurrentUser()?.email,
               let senderUID = getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
@@ -190,7 +183,7 @@ extension DatabaseManager {
                 value.append(senderConversation)
                 senderRef.setValue(value) { error, _ in
                     guard error == nil else {
-                        completion(false)
+                        completion(.failure(DatabaseError.failedToWrite))
                         return
                     }
                     self.addConversation(conversationId: conversationId, senderEmail: senderEmail, senderName: senderName, message: message, completion: completion)
@@ -198,7 +191,7 @@ extension DatabaseManager {
             } else {
                 senderRef.setValue([senderConversation]) { error, _ in
                     guard error == nil else {
-                        completion(false)
+                        completion(.failure(DatabaseError.failedToWrite))
                         return
                     }
                     self.addConversation(conversationId: conversationId, senderEmail: senderEmail, senderName: senderName, message: message, completion: completion)
@@ -443,7 +436,7 @@ extension DatabaseManager {
         }
     }
     
-    private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Bool) -> Void ) {
+    private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
         let dateString = Date.formatToString(using: .en_US_POSIX, from: message.sentDate)
         
         var newMessage = ""
@@ -486,10 +479,10 @@ extension DatabaseManager {
         ]
         database.child(conversationId).setValue(value) { error, _ in
             guard error == nil else {
-                completion(false)
+                completion(.failure(DatabaseError.failedToWrite))
                 return
             }
-            completion(true)
+            completion(.success(conversationId))
         }
     }
     
