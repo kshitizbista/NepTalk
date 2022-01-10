@@ -156,7 +156,7 @@ class LoginViewController: UIViewController {
                     if let userData = data as? [String: Any]  {
                         let firstName = (userData["firstName"] as? String) ?? ""
                         let lastName = (userData["lastName"] as? String) ?? ""
-                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
                     }
                 case .failure(let error):
                     print("Failed toread data with error \(error)")
@@ -217,7 +217,7 @@ extension LoginViewController: LoginButtonDelegate {
                     if let email = fbResult["email"] as? String {
                         let firstName = (fbResult["first_name"] as? String) ?? ""
                         let lastName = (fbResult["last_name"] as? String) ?? ""
-                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
                         DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
                             if !exists {
@@ -239,7 +239,7 @@ extension LoginViewController: LoginButtonDelegate {
                                             StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
                                                 switch result {
                                                 case .success(let downloadUrl):
-                                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                                    UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
                                                 case .failure(let error):
                                                     print("Storage manager error: \(error)")
                                                 }
@@ -291,7 +291,7 @@ extension LoginViewController {
                         let email = userProfile.email
                         let firstName = userProfile.givenName ?? ""
                         let lastName = userProfile.familyName ?? ""
-                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
                         DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
                             if !exists {
                                 let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
@@ -304,7 +304,7 @@ extension LoginViewController {
                                             StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
                                                 switch result {
                                                 case .success(let downloadUrl):
-                                                    UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                                                    UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
                                                 case .failure(let error):
                                                     print("Storage manager error: \(error)")
                                                 }

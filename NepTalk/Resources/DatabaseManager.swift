@@ -118,7 +118,7 @@ extension DatabaseManager {
     public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Bool) -> Void) {
         guard let senderEmail = getCurrentUser()?.email,
               let senderUID = getCurrentUser()?.uid,
-              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+              let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
         let senderRef = database.child("\(senderUID)/conversations")
@@ -304,7 +304,7 @@ extension DatabaseManager {
         
         guard let senderEmail = getCurrentUser()?.email,
               let senderUID = getCurrentUser()?.uid,
-              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+              let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
         

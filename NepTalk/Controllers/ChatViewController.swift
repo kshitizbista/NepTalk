@@ -19,7 +19,7 @@ class ChatViewController: MessagesViewController {
     private var messages = [Message]()
     private var selfSender: Sender? {
         guard let email = DatabaseManager.shared.getCurrentUser()?.email,
-              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+              let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return nil
               }
         return Sender(senderId:email, displayName: senderName, photoURL: "")

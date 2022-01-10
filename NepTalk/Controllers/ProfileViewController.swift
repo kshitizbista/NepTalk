@@ -19,12 +19,14 @@ class ProfileViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
-        data.append(ProfileViewModel(type: .info, title: "Name: \(UserDefaults.standard.value(forKey: "name") ?? "No Name")"))
+        data.append(ProfileViewModel(type: .info, title: "Name: \(UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) ?? "No Name")"))
         data.append(ProfileViewModel(type: .info, title: "Email: \(DatabaseManager.shared.getCurrentUser()?.email ?? "No Email")"))
         data.append(ProfileViewModel(type: .logout, title: "Log Out", handler: { [weak self] in
             guard let self = self else { return }
             let actionSheet = UIAlertController(title: "Do you want to log out ?", message: "", preferredStyle: .actionSheet)
-            actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: {_ in
+            actionSheet.addAction(UIAlertAction(title: "Log Out", style: .destructive, handler: { _ in
+                UserDefaults.standard.set(nil, forKey: K.UserDefaultsKey.profileName)
+                UserDefaults.standard.set(nil, forKey: K.UserDefaultsKey.profilePictureUrl)
                 FBSDKLoginKit.LoginManager().logOut()
                 do {
                     try Auth.auth().signOut()

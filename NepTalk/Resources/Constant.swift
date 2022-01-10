@@ -28,4 +28,9 @@ struct K {
         static let linkItem = "link_item"
         static let custom = "custom"
     }
+    
+    struct UserDefaultsKey {
+        static let profileName = "name"
+        static let profilePictureUrl = "profile_picture_url"
+    }
 }

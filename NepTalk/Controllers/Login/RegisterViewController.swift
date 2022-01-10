@@ -179,7 +179,7 @@ class RegisterViewController: UIViewController {
                 self.alertUserLoginError(message: error?.localizedDescription)
                 return
             }
-            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: "name")
+            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
             let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email)
             DatabaseManager.shared.insertUser(with: appUser) { success in
                 if success {
@@ -190,7 +190,7 @@ class RegisterViewController: UIViewController {
                     StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
                         switch result {
                         case .success(let downloadUrl):
-                            UserDefaults.standard.set(downloadUrl, forKey: "profile_picture_url")
+                            UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
                         case .failure(let error):
                             print("Storage manager error: \(error)")
                         }
