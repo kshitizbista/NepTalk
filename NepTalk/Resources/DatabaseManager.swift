@@ -372,11 +372,9 @@ extension DatabaseManager {
                 
                 senderNodeRef.observeSingleEvent(of: .value) { snapshot in
                     var senderConversations = [[String: Any]]()
-                    if let value = snapshot.value as? [[String: Any]]  {
-                        senderConversations = value
-                        guard let row = senderConversations.firstIndex(where: {$0["id"] as? String == conversationId}) else {
-                            return
-                        }
+                    let value = snapshot.value as? [[String: Any]]
+                    if value != nil, let row = value!.firstIndex(where: {$0["id"] as? String == conversationId})  {
+                        senderConversations = value!
                         senderConversations[row]["latest_message"] = latestMessage
                     } else {
                         let newConversationEntry: [String: Any] = [
@@ -386,7 +384,12 @@ extension DatabaseManager {
                             "receiver_name": receiver.name,
                             "latest_message": latestMessage
                         ]
-                        senderConversations = [newConversationEntry]
+                        if value != nil {
+                            senderConversations = value!
+                            senderConversations.append(newConversationEntry)
+                        } else {
+                            senderConversations = [newConversationEntry]
+                        }
                     }
                     senderNodeRef.setValue(senderConversations) { error, _ in
                         guard error == nil else {
@@ -396,11 +399,9 @@ extension DatabaseManager {
                         
                         receiverNodeRef.observeSingleEvent(of: .value) { snapshot in
                             var recieverConversations = [[String: Any]]()
-                            if let value = snapshot.value as? [[String: Any]]  {
-                                recieverConversations = value
-                                guard let row = recieverConversations.firstIndex(where: {$0["id"] as? String == conversationId}) else {
-                                    return
-                                }
+                            let value = snapshot.value as? [[String: Any]]
+                            if value != nil, let row = value!.firstIndex(where: {$0["id"] as? String == conversationId}) {
+                                recieverConversations = value!
                                 recieverConversations[row]["latest_message"] = latestMessage
                             } else {
                                 let newConversationEntry: [String: Any] = [
@@ -410,7 +411,12 @@ extension DatabaseManager {
                                     "receiver_name": senderName,
                                     "latest_message": latestMessage
                                 ]
-                                recieverConversations = [newConversationEntry]
+                                if value != nil {
+                                    recieverConversations = value!
+                                    recieverConversations.append(newConversationEntry)
+                                } else {
+                                    recieverConversations = [newConversationEntry]
+                                }
                             }
                             receiverNodeRef.setValue(recieverConversations) { error, _ in
                                 guard error == nil else {

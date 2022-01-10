@@ -83,7 +83,7 @@ class ConversationsViewController: UIViewController {
             } else {
                 self.createNewConversation(userResult: result)
             }
-           
+            
         }
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
@@ -141,15 +141,22 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            tableView.beginUpdates()
             let conversationId = conversations[indexPath.row].id
             DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
                 if success {
-                    self?.conversations.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .left)
+                   print("Conversation deleted")
                 }
             }
-            tableView.endUpdates()
+            //            Dont need to manually delete because we are listening to the changes in startListeningForConversations func
+            //            tableView.beginUpdates()
+            //            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
+            //                if success {
+            //                    guard let self = self else { return }
+            //                    self.conversations.remove(at: indexPath.row)
+            //                    tableView.deleteRows(at: [indexPath], with: .left)
+            //                }
+            //            }
+            //            tableView.endUpdates()
         }
     }
     
