@@ -24,6 +24,8 @@ class ChatViewController: MessagesViewController {
               }
         return Sender(senderId:email, displayName: senderName, photoURL: "")
     }
+    private var senderPhotoUrl: URL?
+    private var receiverPhotoUrl: URL?
     
     init(with: UserResult, id: String?) {
         self.receipentUser = with
@@ -219,6 +221,47 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             return UIColor(named: K.BrandColor.blue)!
         }
         return .secondarySystemBackground
+    }
+    
+    func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
+        let sender = message.sender
+        if sender.senderId == selfSender?.senderId {
+            if let senderPhotoUrl = self.senderPhotoUrl {
+                avatarView.sd_setImage(with: senderPhotoUrl)
+            } else {
+                let uid = DatabaseManager.shared.getCurrentUser()!.uid
+                let path = "images/\(uid)_profile_pic.png"
+                StorageManager.shared.downloadURL(for: path) { result in
+                    switch result {
+                    case .success(let url):
+                        self.senderPhotoUrl = url
+                        DispatchQueue.main.async {
+                            avatarView.sd_setImage(with: url)
+                        }
+                    case.failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        } else {
+            if let receiverPhotoUrl = self.receiverPhotoUrl {
+                avatarView.sd_setImage(with: receiverPhotoUrl)
+            } else {
+                let uid = receipentUser.uid
+                let path = "images/\(uid)_profile_pic.png"
+                StorageManager.shared.downloadURL(for: path) { result in
+                    switch result {
+                    case .success(let url):
+                        self.receiverPhotoUrl = url
+                        DispatchQueue.main.async {
+                            avatarView.sd_setImage(with: url)
+                        }
+                    case.failure(let error):
+                        print(error)
+                    }
+                }
+            }
+        }
     }
 }
 
