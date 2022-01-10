@@ -197,8 +197,6 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         return messages.count
     }
     
-    
-    
     func configureMediaMessageImageView(_ imageView: UIImageView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         guard let message = message as? Message else {
             return
@@ -213,6 +211,14 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         default:
             break
         }
+    }
+    
+    func backgroundColor(for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> UIColor {
+        let sender = message.sender
+        if sender.senderId == selfSender?.senderId {
+            return UIColor(named: K.BrandColor.blue)!
+        }
+        return .secondarySystemBackground
     }
 }
 
