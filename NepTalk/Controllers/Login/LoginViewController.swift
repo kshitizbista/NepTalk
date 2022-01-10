@@ -146,7 +146,7 @@ class LoginViewController: UIViewController {
             DispatchQueue.main.async {
                 self.spinner.dismiss()
             }
-            if authResult != nil, let error = error  {
+            if authResult == nil, let error = error  {
                 self.alertUserLoginError(message: error.localizedDescription)
                 return
             }
