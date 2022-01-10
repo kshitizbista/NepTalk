@@ -231,10 +231,10 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             } else {
                 let uid = DatabaseManager.shared.getCurrentUser()!.uid
                 let path = "images/\(uid)_profile_pic.png"
-                StorageManager.shared.downloadURL(for: path) { result in
+                StorageManager.shared.downloadURL(for: path) { [weak self] result in
                     switch result {
                     case .success(let url):
-                        self.senderPhotoUrl = url
+                        self?.senderPhotoUrl = url
                         DispatchQueue.main.async {
                             avatarView.sd_setImage(with: url)
                         }
@@ -249,10 +249,10 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             } else {
                 let uid = receipentUser.uid
                 let path = "images/\(uid)_profile_pic.png"
-                StorageManager.shared.downloadURL(for: path) { result in
+                StorageManager.shared.downloadURL(for: path) { [weak self] result in
                     switch result {
                     case .success(let url):
-                        self.receiverPhotoUrl = url
+                        self?.receiverPhotoUrl = url
                         DispatchQueue.main.async {
                             avatarView.sd_setImage(with: url)
                         }

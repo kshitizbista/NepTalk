@@ -38,17 +38,13 @@ class ConversationsViewController: UIViewController {
         view.addSubview(noConversationLabel)
         tableView.delegate = self
         tableView.dataSource = self
-        fetchConversation()
         startListeningForConversations()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
-    }
-    
-    private func fetchConversation() {
-        tableView.isHidden = false
+        noConversationLabel.frame = CGRect(x: 10, y: (view.height-100)/2, width: view.width - 20, height: 100)
     }
     
     private func startListeningForConversations() {
@@ -56,13 +52,19 @@ class ConversationsViewController: UIViewController {
             switch result {
             case .success(let conversations):
                 guard !conversations.isEmpty else {
+                    self?.tableView.isHidden = true
+                    self?.noConversationLabel.isHidden = false
                     return
                 }
+                self?.tableView.isHidden = false
+                self?.noConversationLabel.isHidden = true
                 self?.conversations = conversations
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                 }
             case .failure(let error):
+                self?.tableView.isHidden = true
+                self?.noConversationLabel.isHidden = false
                 print("failed to get convos: \(error)")
             }
         }
