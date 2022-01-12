@@ -16,8 +16,19 @@ final class DatabaseManager {
     static let shared = DatabaseManager()
     private let database = Database.database().reference()
     
+    private init () {}
+    
     public enum DatabaseError: Error {
-        case failedToFetch, failedToWrite
+        case failedToFetch,
+             failedToWrite
+        public var localizedDescription: String {
+            switch self {
+            case .failedToFetch:
+                return "Failed to fetch data from firebase"
+            case .failedToWrite:
+                return "Failed to write data to firebase"
+            }
+        }
     }
 }
 
