@@ -97,7 +97,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         searchBar.resignFirstResponder()
         results.removeAll()
         spinner.show(in: view)
-        self.searchUsers(query: text)
+        searchUsers(query: text)
     }
     
     private func searchUsers(query: String) {
@@ -122,7 +122,7 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     private func filterUsers(with term: String) {
         // update the UI: either show results or show no result label
-        let results = self.users.filter {
+        let results = users.filter {
             let name = $0.name.lowercased()
             return name.hasPrefix(term.lowercased()) && $0.email.lowercased() != DatabaseManager.shared.getCurrentUser()!.email
         }
@@ -135,12 +135,12 @@ extension NewConversationViewController: UISearchBarDelegate {
     
     private func updateUI(){
         if results.isEmpty {
-            self.noResultLabel.isHidden = false
-            self.tableView.isHidden = true
+            noResultLabel.isHidden = false
+            tableView.isHidden = true
         } else {
-            self.noResultLabel.isHidden = true
-            self.tableView.isHidden = false
-            self.tableView.reloadData()
+            noResultLabel.isHidden = true
+            tableView.isHidden = false
+            tableView.reloadData()
         }
     }
 }

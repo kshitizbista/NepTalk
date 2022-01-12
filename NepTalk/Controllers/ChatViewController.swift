@@ -28,8 +28,8 @@ class ChatViewController: MessagesViewController {
     private var receiverPhotoUrl: URL?
     
     init(with: UserResult, id: String?) {
-        self.receipentUser = with
-        self.conversationId = id
+        receipentUser = with
+        conversationId = id
         super.init(nibName: nil, bundle: nil)
     }
     
@@ -226,7 +226,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
     func configureAvatarView(_ avatarView: AvatarView, for message: MessageType, at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) {
         let sender = message.sender
         if sender.senderId == selfSender?.senderId {
-            if let senderPhotoUrl = self.senderPhotoUrl {
+            if let senderPhotoUrl = senderPhotoUrl {
                 avatarView.sd_setImage(with: senderPhotoUrl)
             } else {
                 let uid = DatabaseManager.shared.getCurrentUser()!.uid
@@ -244,7 +244,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
                 }
             }
         } else {
-            if let receiverPhotoUrl = self.receiverPhotoUrl {
+            if let receiverPhotoUrl = receiverPhotoUrl {
                 avatarView.sd_setImage(with: receiverPhotoUrl)
             } else {
                 let uid = receipentUser.uid
@@ -377,7 +377,7 @@ extension ChatViewController: MessageCellDelegate {
                 return
             }
             let vc = PhotoViewerViewController(with: imageUrl)
-            self.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
         case .video(let media):
             guard let videoUrl = media.url else {
                 return
@@ -401,7 +401,7 @@ extension ChatViewController: MessageCellDelegate {
             let coordinates = locationItem.location.coordinate
             let vc = LocationPickerViewController(coordinates: coordinates)
             vc.title = "Location"
-            self.navigationController?.pushViewController(vc, animated: true)
+            navigationController?.pushViewController(vc, animated: true)
             break
         default:
             break

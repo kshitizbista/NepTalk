@@ -41,14 +41,14 @@ extension DatabaseManager {
     
     /// Inserts new user to databse
     public func insertUser (with user: AppUser, completion: @escaping (Bool) -> Void) {
-        database.child(user.uid).setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email]) { error, _ in
-            guard error == nil  else {
-                print("failed to write to database")
-                completion(false)
-                return
-            }
-            self.database.child("users").observeSingleEvent(of: .value) { [weak self] snapshot in
-                guard let self = self else { return }
+        database.child(user.uid).setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email]) { [weak self] error, _ in
+            guard error == nil,
+                  let self = self else {
+                      print("failed to write to database")
+                      completion(false)
+                      return
+                  }
+            self.database.child("users").observeSingleEvent(of: .value) { snapshot in
                 if var userCollections = snapshot.value as? [[String: String]] {
                     let newElements = [
                         "name": user.firstName + " " + user.lastName,
@@ -238,7 +238,7 @@ extension DatabaseManager {
             
             let messages: [Message] = value.compactMap { dictionary in
                 guard let senderName = dictionary["sender_name"] as? String,
-                  //    let isRead = dictionary["is_read"] as? Bool,
+                      //    let isRead = dictionary["is_read"] as? Bool,
                       let messageId = dictionary["id"] as? String,
                       let content = dictionary["content"] as? String,
                       let senderEmail = dictionary["sender_email"] as? String,
@@ -427,7 +427,7 @@ extension DatabaseManager {
     }
     
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
-        self.database.child(path).observeSingleEvent(of: .value) { snapshot in
+        database.child(path).observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return

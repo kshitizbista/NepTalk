@@ -52,8 +52,8 @@ final class ConversationTableViewCell: UITableViewCell {
     }
     
     public func configure(with model: Conversation) {
-        self.userMessageLabel.text = model.latestMessage.message
-        self.userNameLabel.text = model.receiverName
+        userMessageLabel.text = model.latestMessage.message
+        userNameLabel.text = model.receiverName
         let path = "images/\(model.receiverUID)_profile_pic.png"
         StorageManager.shared.downloadURL(for: path) { [weak self] result in
             switch result {
