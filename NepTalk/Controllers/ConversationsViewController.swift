@@ -38,17 +38,13 @@ class ConversationsViewController: UIViewController {
         view.addSubview(noConversationLabel)
         tableView.delegate = self
         tableView.dataSource = self
-        fetchConversation()
         startListeningForConversations()
     }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
         tableView.frame = view.bounds
-    }
-    
-    private func fetchConversation() {
-        tableView.isHidden = false
+        noConversationLabel.frame = CGRect(x: 10, y: (view.height-100)/2, width: view.width - 20, height: 100)
     }
     
     private func startListeningForConversations() {
@@ -56,13 +52,19 @@ class ConversationsViewController: UIViewController {
             switch result {
             case .success(let conversations):
                 guard !conversations.isEmpty else {
+                    self?.tableView.isHidden = true
+                    self?.noConversationLabel.isHidden = false
                     return
                 }
+                self?.tableView.isHidden = false
+                self?.noConversationLabel.isHidden = true
                 self?.conversations = conversations
                 DispatchQueue.main.async {
                     self?.tableView.reloadData()
                 }
             case .failure(let error):
+                self?.tableView.isHidden = true
+                self?.noConversationLabel.isHidden = false
                 print("failed to get convos: \(error)")
             }
         }
@@ -83,7 +85,7 @@ class ConversationsViewController: UIViewController {
             } else {
                 self.createNewConversation(userResult: result)
             }
-           
+            
         }
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
@@ -141,15 +143,22 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            tableView.beginUpdates()
             let conversationId = conversations[indexPath.row].id
             DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
                 if success {
-                    self?.conversations.remove(at: indexPath.row)
-                    tableView.deleteRows(at: [indexPath], with: .left)
+                   print("Conversation deleted")
                 }
             }
-            tableView.endUpdates()
+            //            Dont need to manually delete because we are listening to the changes in startListeningForConversations func
+            //            tableView.beginUpdates()
+            //            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
+            //                if success {
+            //                    guard let self = self else { return }
+            //                    self.conversations.remove(at: indexPath.row)
+            //                    tableView.deleteRows(at: [indexPath], with: .left)
+            //                }
+            //            }
+            //            tableView.endUpdates()
         }
     }
     

@@ -71,7 +71,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     }
     
     func changeRootViewController(with identifier: String, animated: Bool = true) {
-        guard let window = self.window else { return }
+        guard let window = window else { return }
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let vc = storyboard.instantiateViewController(identifier: identifier)
         window.rootViewController = vc

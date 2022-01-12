@@ -26,7 +26,7 @@ class LocationPickerViewController: UIViewController {
     
     init(coordinates: CLLocationCoordinate2D? = nil) {
         self.coordinates = coordinates
-        self.isPickable = false
+        isPickable = false
         super.init(nibName: nil, bundle: nil)
     }
     

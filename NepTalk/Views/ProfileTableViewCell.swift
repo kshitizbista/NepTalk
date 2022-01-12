@@ -7,19 +7,19 @@
 
 import UIKit
 
-class ProfileTableViewCell: UITableViewCell {
+final class ProfileTableViewCell: UITableViewCell {
     
     static let identifier = "ProfileTableviewCell"
     
     public func configure(with viewModal: ProfileViewModel) {
-        self.textLabel?.text = viewModal.title
+        textLabel?.text = viewModal.title
         switch viewModal.type {
         case .info:
-            self.textLabel?.textAlignment = .left
-            self.selectionStyle = .none
+            textLabel?.textAlignment = .left
+            selectionStyle = .none
         case .logout:
-            self.textLabel?.textColor = .systemRed
-            self.textLabel?.textAlignment = .center
+            textLabel?.textColor = .systemRed
+            textLabel?.textAlignment = .center
         }
     }
 }

@@ -13,18 +13,22 @@ import CoreLocation
 
 final class DatabaseManager {
     
-    private init() {}
     static let shared = DatabaseManager()
     private let database = Database.database().reference()
     
-    static func safeEmail(email: String) -> String {
-        var safeEmail = email.replacingOccurrences(of: ".", with: "-")
-        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
-        return safeEmail
-    }
+    private init () {}
     
     public enum DatabaseError: Error {
-        case failedToFetch
+        case failedToFetch,
+             failedToWrite
+        public var localizedDescription: String {
+            switch self {
+            case .failedToFetch:
+                return "Failed to fetch data from firebase"
+            case .failedToWrite:
+                return "Failed to write data to firebase"
+            }
+        }
     }
 }
 
@@ -48,14 +52,14 @@ extension DatabaseManager {
     
     /// Inserts new user to databse
     public func insertUser (with user: AppUser, completion: @escaping (Bool) -> Void) {
-        database.child(user.uid).setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email]) { error, _ in
-            guard error == nil  else {
-                print("failed to write to database")
-                completion(false)
-                return
-            }
-            self.database.child("users").observeSingleEvent(of: .value) { [weak self] snapshot in
-                guard let self = self else { return }
+        database.child(user.uid).setValue(["firstName": user.firstName, "lastName": user.lastName, "email": user.email]) { [weak self] error, _ in
+            guard error == nil,
+                  let self = self else {
+                      print("failed to write to database")
+                      completion(false)
+                      return
+                  }
+            self.database.child("users").observeSingleEvent(of: .value) { snapshot in
                 if var userCollections = snapshot.value as? [[String: String]] {
                     let newElements = [
                         "name": user.firstName + " " + user.lastName,
@@ -115,10 +119,10 @@ extension DatabaseManager {
 extension DatabaseManager {
     
     /// Create a new conversation with target user email
-    public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Bool) -> Void) {
+    public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
         guard let senderEmail = getCurrentUser()?.email,
               let senderUID = getCurrentUser()?.uid,
-              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+              let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
         let senderRef = database.child("\(senderUID)/conversations")
@@ -190,7 +194,7 @@ extension DatabaseManager {
                 value.append(senderConversation)
                 senderRef.setValue(value) { error, _ in
                     guard error == nil else {
-                        completion(false)
+                        completion(.failure(DatabaseError.failedToWrite))
                         return
                     }
                     self.addConversation(conversationId: conversationId, senderEmail: senderEmail, senderName: senderName, message: message, completion: completion)
@@ -198,7 +202,7 @@ extension DatabaseManager {
             } else {
                 senderRef.setValue([senderConversation]) { error, _ in
                     guard error == nil else {
-                        completion(false)
+                        completion(.failure(DatabaseError.failedToWrite))
                         return
                     }
                     self.addConversation(conversationId: conversationId, senderEmail: senderEmail, senderName: senderName, message: message, completion: completion)
@@ -245,7 +249,7 @@ extension DatabaseManager {
             
             let messages: [Message] = value.compactMap { dictionary in
                 guard let senderName = dictionary["sender_name"] as? String,
-                  //    let isRead = dictionary["is_read"] as? Bool,
+                      //    let isRead = dictionary["is_read"] as? Bool,
                       let messageId = dictionary["id"] as? String,
                       let content = dictionary["content"] as? String,
                       let senderEmail = dictionary["sender_email"] as? String,
@@ -304,7 +308,7 @@ extension DatabaseManager {
         
         guard let senderEmail = getCurrentUser()?.email,
               let senderUID = getCurrentUser()?.uid,
-              let senderName = UserDefaults.standard.value(forKey: "name") as? String else {
+              let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
         
@@ -372,11 +376,9 @@ extension DatabaseManager {
                 
                 senderNodeRef.observeSingleEvent(of: .value) { snapshot in
                     var senderConversations = [[String: Any]]()
-                    if let value = snapshot.value as? [[String: Any]]  {
-                        senderConversations = value
-                        guard let row = senderConversations.firstIndex(where: {$0["id"] as? String == conversationId}) else {
-                            return
-                        }
+                    let value = snapshot.value as? [[String: Any]]
+                    if value != nil, let row = value!.firstIndex(where: {$0["id"] as? String == conversationId})  {
+                        senderConversations = value!
                         senderConversations[row]["latest_message"] = latestMessage
                     } else {
                         let newConversationEntry: [String: Any] = [
@@ -386,7 +388,12 @@ extension DatabaseManager {
                             "receiver_name": receiver.name,
                             "latest_message": latestMessage
                         ]
-                        senderConversations = [newConversationEntry]
+                        if value != nil {
+                            senderConversations = value!
+                            senderConversations.append(newConversationEntry)
+                        } else {
+                            senderConversations = [newConversationEntry]
+                        }
                     }
                     senderNodeRef.setValue(senderConversations) { error, _ in
                         guard error == nil else {
@@ -396,11 +403,9 @@ extension DatabaseManager {
                         
                         receiverNodeRef.observeSingleEvent(of: .value) { snapshot in
                             var recieverConversations = [[String: Any]]()
-                            if let value = snapshot.value as? [[String: Any]]  {
-                                recieverConversations = value
-                                guard let row = recieverConversations.firstIndex(where: {$0["id"] as? String == conversationId}) else {
-                                    return
-                                }
+                            let value = snapshot.value as? [[String: Any]]
+                            if value != nil, let row = value!.firstIndex(where: {$0["id"] as? String == conversationId}) {
+                                recieverConversations = value!
                                 recieverConversations[row]["latest_message"] = latestMessage
                             } else {
                                 let newConversationEntry: [String: Any] = [
@@ -410,7 +415,12 @@ extension DatabaseManager {
                                     "receiver_name": senderName,
                                     "latest_message": latestMessage
                                 ]
-                                recieverConversations = [newConversationEntry]
+                                if value != nil {
+                                    recieverConversations = value!
+                                    recieverConversations.append(newConversationEntry)
+                                } else {
+                                    recieverConversations = [newConversationEntry]
+                                }
                             }
                             receiverNodeRef.setValue(recieverConversations) { error, _ in
                                 guard error == nil else {
@@ -428,7 +438,7 @@ extension DatabaseManager {
     }
     
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
-        self.database.child(path).observeSingleEvent(of: .value) { snapshot in
+        database.child(path).observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
@@ -437,7 +447,7 @@ extension DatabaseManager {
         }
     }
     
-    private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Bool) -> Void ) {
+    private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
         let dateString = Date.formatToString(using: .en_US_POSIX, from: message.sentDate)
         
         var newMessage = ""
@@ -480,10 +490,10 @@ extension DatabaseManager {
         ]
         database.child(conversationId).setValue(value) { error, _ in
             guard error == nil else {
-                completion(false)
+                completion(.failure(DatabaseError.failedToWrite))
                 return
             }
-            completion(true)
+            completion(.success(conversationId))
         }
     }
     
