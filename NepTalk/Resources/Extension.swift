@@ -79,3 +79,32 @@ extension Date {
       return formatter.string(from: date)
    }
 }
+
+
+extension Message {
+    var string: String {
+        switch self.kind {
+        case .text(let textMessage):
+            return textMessage
+        case .attributedText(_):
+            return ""
+        case .photo(let mediaItem):
+            return mediaItem.url!.absoluteString
+        case .video(let mediaItem):
+            return mediaItem.url!.absoluteString
+        case .location(let locationItem):
+            let location = locationItem.location
+            return "\(location.coordinate.longitude),\(location.coordinate.latitude)"
+        case .emoji(_):
+            return ""
+        case .audio(_):
+            return ""
+        case .contact(_):
+            return ""
+        case .linkPreview(_):
+            return ""
+        case .custom(_):
+            return ""
+        }
+    }
+}

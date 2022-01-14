@@ -132,6 +132,15 @@
 			path = ViewModel;
 			sourceTree = "<group>";
 		};
+		391D158B2791A7D200CC9494 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				390E79B3275928BC00B31FAE /* DatabaseManager.swift */,
+				39B94A0A276F6835005A7CA9 /* StorageManager.swift */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
 		391FB2AA27808E4D0078A6A3 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -166,6 +175,7 @@
 		39B7893B27429258009D9B6E /* NepTalk */ = {
 			isa = PBXGroup;
 			children = (
+				391D158B2791A7D200CC9494 /* Services */,
 				390B5296278B5162002EE4BD /* ViewModel */,
 				391FB2AA27808E4D0078A6A3 /* Models */,
 				39B789702742972F009D9B6E /* Resources */,
@@ -210,8 +220,6 @@
 				39B7893C27429258009D9B6E /* AppDelegate.swift */,
 				39B7893E27429258009D9B6E /* SceneDelegate.swift */,
 				39E294012754200900D57C42 /* Extension.swift */,
-				390E79B3275928BC00B31FAE /* DatabaseManager.swift */,
-				39B94A0A276F6835005A7CA9 /* StorageManager.swift */,
 				391FB2B12780901B0078A6A3 /* Constant.swift */,
 			);
 			path = Resources;

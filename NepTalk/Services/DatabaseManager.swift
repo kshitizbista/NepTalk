@@ -130,30 +130,6 @@ extension DatabaseManager {
         let messageDate = message.sentDate
         let dateString = Date.formatToString(using: .en_US_POSIX, from: messageDate)
         
-        var newMessage = ""
-        switch message.kind {
-        case .text(let textMessage):
-            newMessage = textMessage
-        case .attributedText(_):
-            break
-        case .photo(_):
-            break
-        case .video(_):
-            break
-        case .location(_):
-            break
-        case .emoji(_):
-            break
-        case .audio(_):
-            break
-        case .contact(_):
-            break
-        case .linkPreview(_):
-            break
-        case .custom(_):
-            break
-        }
-        
         let conversationId = "conversation_\(message.messageId)"
         let senderConversation: [String: Any] = [
             "id": conversationId,
@@ -162,7 +138,7 @@ extension DatabaseManager {
             "receiver_name": receiver.name,
             "latest_message": [
                 "date": dateString,
-                "message": newMessage,
+                "message": message.string,
                 "is_read": false
             ]
         ]
@@ -174,7 +150,7 @@ extension DatabaseManager {
             "receiver_name": senderName,
             "latest_message": [
                 "date": dateString,
-                "message": newMessage,
+                "message": message.string,
                 "is_read": false
             ]
         ]
@@ -315,35 +291,10 @@ extension DatabaseManager {
         let messageDate = message.sentDate
         let dateString = Date.formatToString(using: .en_US_POSIX, from: messageDate)
         
-        var newMessage = ""
-        switch message.kind {
-        case .text(let textMessage):
-            newMessage = textMessage
-        case .attributedText(_):
-            break
-        case .photo(let mediaItem):
-            newMessage = mediaItem.url!.absoluteString
-        case .video(let mediaItem):
-            newMessage = mediaItem.url!.absoluteString
-        case .location(let locationItem):
-            let location = locationItem.location
-            newMessage = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
-        case .emoji(_):
-            break
-        case .audio(_):
-            break
-        case .contact(_):
-            break
-        case .linkPreview(_):
-            break
-        case .custom(_):
-            break
-        }
-        
         let messageEntry: [String: Any] = [
             "id": message.messageId,
             "type": message.kind.string,
-            "content": newMessage,
+            "content": message.string,
             "date": dateString,
             "sender_email": senderEmail,
             "sender_name": senderName,
@@ -352,7 +303,7 @@ extension DatabaseManager {
         
         let latestMessage: [String: Any] = [
             "date": dateString,
-            "message": newMessage,
+            "message": message.string,
             "is_read": false
         ]
         
@@ -450,34 +401,10 @@ extension DatabaseManager {
     private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
         let dateString = Date.formatToString(using: .en_US_POSIX, from: message.sentDate)
         
-        var newMessage = ""
-        switch message.kind {
-        case .text(let textMessage):
-            newMessage = textMessage
-        case .attributedText(_):
-            break
-        case .photo(_):
-            break
-        case .video(_):
-            break
-        case .location(_):
-            break
-        case .emoji(_):
-            break
-        case .audio(_):
-            break
-        case .contact(_):
-            break
-        case .linkPreview(_):
-            break
-        case .custom(_):
-            break
-        }
-        
         let collectionMessage: [String: Any] = [
             "id": message.messageId,
             "type": message.kind.string,
-            "content": newMessage,
+            "content": message.string,
             "date": dateString,
             "sender_email": senderEmail,
             "sender_name": senderName,
