@@ -15,6 +15,10 @@ final class FirebaseAuthManager {
     private init() {
     }
     
+    func getCurrentUser() -> User? {
+        return Auth.auth().currentUser
+    }
+    
     func signIn(with email: String, password: String, completion: @escaping (Result<AuthDataResult, Error>) -> Void ) {
         Auth.auth().signIn(withEmail: email, password: password) { authResult, authError in
             if authResult == nil, let error = authError {

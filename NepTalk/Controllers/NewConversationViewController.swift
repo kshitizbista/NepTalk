@@ -124,7 +124,7 @@ extension NewConversationViewController: UISearchBarDelegate {
         // update the UI: either show results or show no result label
         let results = users.filter {
             let name = $0.name.lowercased()
-            return name.hasPrefix(term.lowercased()) && $0.email.lowercased() != DatabaseManager.shared.getCurrentUser()!.email
+            return name.hasPrefix(term.lowercased()) && $0.email.lowercased() != FirebaseAuthManager.shared.getCurrentUser()!.email
         }
         self.results = results
         DispatchQueue.main.async {
