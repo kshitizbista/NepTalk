@@ -12,6 +12,7 @@ import JGProgressHUD
 class RegisterViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
+    private let loginViewModel = LoginViewModel()
     
     private let scrollView: UIScrollView = {
         let scrollView: UIScrollView = UIScrollView()
@@ -112,6 +113,7 @@ class RegisterViewController: UIViewController {
         lastNameField.delegate = self
         emailField.delegate = self
         passwordField.delegate = self
+        loginViewModel.delegate = self
         
         // Add subsviews
         view.addSubview(scrollView)
@@ -168,37 +170,8 @@ class RegisterViewController: UIViewController {
               }
         
         spinner.show(in: view)
-        
-        // Firebase login
-        Auth.auth().createUser(withEmail: email, password: password) { [weak self] authResult, error in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.spinner.dismiss()
-            }
-            guard let result = authResult, error == nil else {
-                self.alertUserLoginError(message: error?.localizedDescription)
-                return
-            }
-            UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
-            let appUser = AppUser(uid: result.user.uid, firstName: firstName, lastName: lastName, email: email)
-            DatabaseManager.shared.insertUser(with: appUser) { success in
-                if success {
-                    guard let image = self.imageView.image, let data = image.pngData() else {
-                        return
-                    }
-                    let fileName = appUser.profilePictureFileName
-                    StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
-                        switch result {
-                        case .success(let downloadUrl):
-                            UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
-                        case .failure(let error):
-                            print("Storage manager error: \(error)")
-                        }
-                    }
-                }
-            }
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
-        }
+        let data = imageView.image?.pngData()
+        loginViewModel.createUser(email: email, password: password, firstName: firstName, lastName: lastName, imageData: data)
     }
     
     private func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
@@ -276,5 +249,18 @@ extension RegisterViewController: UIImagePickerControllerDelegate, UINavigationC
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
         picker.dismiss(animated: true, completion: nil)
+    }
+}
+
+extension RegisterViewController: LoginViewDelegate {
+    
+    func didSignIn() {
+        spinner.dismiss()
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
+    }
+    
+    func isError(error: Error) {
+        spinner.dismiss()
+        handleError(message: error.localizedDescription)
     }
 }

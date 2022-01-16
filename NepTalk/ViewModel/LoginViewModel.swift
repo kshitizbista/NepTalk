@@ -43,6 +43,37 @@ final class LoginViewModel {
             }
         }
     }
+    
+    func createUser(email: String, password: String, firstName: String, lastName: String, imageData: Data?) {
+        AuthManager.shared.createUser(with: email, password: password) { [weak self] result in
+            switch result {
+            case .success(let authResult):
+                self?.delegate?.didSignIn()
+                UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
+                let user = AppUser(uid: authResult.user.uid, firstName: firstName, lastName: lastName, email: email)
+                DatabaseManager.shared.insertUser(with: user) { success in
+                    if success, let data = imageData {
+                        let fileName = user.profilePictureFileName
+                        StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
+                            switch result {
+                            case .success(let downloadUrl):
+                                UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
+                            case .failure(let error):
+                                print("Storage manager error: \(error)")
+                            }
+                        }
+                    }
+                }
+            case .failure(let error):
+                self?.delegate?.isError(error: error)
+            }
+        }
+    }
+    
+    func signOut() {
+        FBSDKLoginKit.LoginManager().logOut()
+        AuthManager.shared.signOut()
+    }
 }
 
 // MARK: - Google SignIn Handler

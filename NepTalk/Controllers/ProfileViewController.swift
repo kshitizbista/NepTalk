@@ -13,6 +13,7 @@ import SDWebImage
 class ProfileViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    private let loginViewModel = LoginViewModel()
     
     var data = [ProfileViewModel]()
     
@@ -28,12 +29,7 @@ class ProfileViewController: UIViewController {
                 UserDefaults.standard.set(nil, forKey: K.UserDefaultsKey.profileName)
                 UserDefaults.standard.set(nil, forKey: K.UserDefaultsKey.profilePictureUrl)
                 FBSDKLoginKit.LoginManager().logOut()
-                do {
-                    try Auth.auth().signOut()
-                } catch {
-                    print("Failed to log out")
-                    print(error)
-                }
+                self.loginViewModel.signOut()
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "LoginNavigationController")
             }))
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))

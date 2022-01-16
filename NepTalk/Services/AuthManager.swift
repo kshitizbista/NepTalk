@@ -31,15 +31,34 @@ final class AuthManager {
     
     func signIn(with credential: AuthCredential, completion: @escaping (Result<AuthDataResult, Error>) -> Void ) {
         Auth.auth().signIn(with: credential) { authResult, error in
-            guard let authResult = authResult, error == nil else {
+            guard let result = authResult, error == nil else {
                 completion(.failure(error!))
                 return
             }
-            completion(.success(authResult))
+            completion(.success(result))
         }
     }
     
     func fbCredential(token: String) -> AuthCredential {
         return FacebookAuthProvider.credential(withAccessToken: token)
+    }
+    
+    func createUser(with email: String, password: String, completion: @escaping (Result<AuthDataResult, Error>) -> Void) {
+        Auth.auth().createUser(withEmail: email, password: password) { authResult, error in
+            guard let result = authResult, error == nil else {
+                completion(.failure(error!))
+                return
+            }
+            completion(.success(result))
+        }
+    }
+    
+    func signOut() {
+        do {
+            try Auth.auth().signOut()
+        } catch {
+            print("Failed to log out")
+            print(error)
+        }
     }
 }
