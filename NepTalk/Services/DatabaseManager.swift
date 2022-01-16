@@ -119,8 +119,8 @@ extension DatabaseManager {
     
     /// Create a new conversation with target user email
     public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
-        guard let senderEmail = FirebaseAuthManager.shared.getCurrentUser()?.email,
-              let senderUID = FirebaseAuthManager.shared.getCurrentUser()?.uid,
+        guard let senderEmail = AuthManager.shared.getCurrentUser()?.email,
+              let senderUID = AuthManager.shared.getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
@@ -188,7 +188,7 @@ extension DatabaseManager {
     
     /// Fetch and return all convsersation for the user with passed in email
     public func getAllConversations(completion: @escaping (Result<[Conversation], Error>) -> Void) {
-        guard let uid = FirebaseAuthManager.shared.getCurrentUser()?.uid else {
+        guard let uid = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
         database.child("\(uid)/conversations").observe(.value) { snapshot in
@@ -281,8 +281,8 @@ extension DatabaseManager {
         // update sender latest message
         // update recepient latest message
         
-        guard let senderEmail = FirebaseAuthManager.shared.getCurrentUser()?.email,
-              let senderUID = FirebaseAuthManager.shared.getCurrentUser()?.uid,
+        guard let senderEmail = AuthManager.shared.getCurrentUser()?.email,
+              let senderUID = AuthManager.shared.getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
@@ -424,7 +424,7 @@ extension DatabaseManager {
     }
     
     public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
-        guard let uid = FirebaseAuthManager.shared.getCurrentUser()?.uid else {
+        guard let uid = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
         let ref = database.child("\(uid)/conversations")
@@ -446,7 +446,7 @@ extension DatabaseManager {
     }
     
     public func conversationExists(with receiverUID: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let senderUID = FirebaseAuthManager.shared.getCurrentUser()?.uid else {
+        guard let senderUID = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
         database.child("\(receiverUID)/conversations").observeSingleEvent(of: .value) { snapshot in

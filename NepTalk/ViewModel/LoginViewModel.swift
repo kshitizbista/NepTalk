@@ -20,7 +20,7 @@ final class LoginViewModel {
     weak var delegate: LoginViewDelegate?
     
     func signIn(withEmail email: String, password: String) {
-        FirebaseAuthManager.shared.signIn(with: email, password: password) { [weak self] result in
+        AuthManager.shared.signIn(with: email, password: password) { [weak self] result in
             switch result {
             case .success(let authResult):
                 self?.delegate?.didSignIn()
@@ -64,7 +64,7 @@ extension LoginViewModel {
                 }
                 
                 let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
-                FirebaseAuthManager.shared.signIn(with: credential) { result in
+                AuthManager.shared.signIn(with: credential) { result in
                     switch result {
                     case .success(let authResult):
                         self.delegate?.didSignIn()
@@ -108,8 +108,8 @@ extension LoginViewModel {
 // MARK: - FaceLogin Handler
 extension LoginViewModel {
     func facebookLogIn(token: String, data: [String: Any]) {
-        let credential = FirebaseAuthManager.shared.fbCredential(token: token)
-        FirebaseAuthManager.shared.signIn(with: credential) { [weak self] result in
+        let credential = AuthManager.shared.fbCredential(token: token)
+        AuthManager.shared.signIn(with: credential) { [weak self] result in
             guard let self = self else { return }
             switch result {
             case .success(let authResult):
