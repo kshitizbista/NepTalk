@@ -8,6 +8,7 @@
 import Foundation
 import UIKit
 import MessageKit
+import FirebaseAuth
 
 extension UIView {
     
@@ -64,20 +65,20 @@ extension MessageKind {
 }
 
 extension DateFormatter {
-   static let en_US_POSIX: DateFormatter = {
-       let formatter = DateFormatter()
-       formatter.dateStyle = .medium
-       formatter.timeStyle = .long
-       formatter.locale = Locale(identifier: "en_US_POSIX")
-       return formatter
-   }()
+    static let en_US_POSIX: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateStyle = .medium
+        formatter.timeStyle = .long
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
 }
 
 
 extension Date {
     static func formatToString(using formatter: DateFormatter, from date: Date) -> String {
-      return formatter.string(from: date)
-   }
+        return formatter.string(from: date)
+    }
 }
 
 
@@ -106,5 +107,37 @@ extension Message {
         case .custom(_):
             return ""
         }
+    }
+}
+
+
+extension AuthErrorCode: Error {
+    var localizedDescription: String {
+        switch self {
+        case .emailAlreadyInUse:
+            return "The email is already in use with another account"
+        case .userNotFound:
+            return "Account not found for the specified user. Please check and try again"
+        case .userDisabled:
+            return "Your account has been disabled. Please contact support."
+        case .invalidEmail, .invalidSender, .invalidRecipientEmail:
+            return "Please enter a valid email"
+        case .networkError:
+            return "Network error. Please try again."
+        case .weakPassword:
+            return "Your password is too weak. The password must be 6 characters long or more."
+        case .wrongPassword:
+            return "Your password is incorrect. Please try again or use 'Forgot password' to reset your password"
+        default:
+            return "Unknown error occurred"
+        }
+    }
+}
+
+extension UIViewController{
+    func handleError(message: String? = "Unknown error occurred") {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
+        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
+        present(alert, animated: true)
     }
 }

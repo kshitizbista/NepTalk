@@ -20,13 +20,16 @@ final class DatabaseManager {
     
     public enum DatabaseError: Error {
         case failedToFetch,
-             failedToWrite
+             failedToWrite,
+            custom(String)
         public var localizedDescription: String {
             switch self {
             case .failedToFetch:
                 return "Failed to fetch data from firebase"
             case .failedToWrite:
                 return "Failed to write data to firebase"
+            case .custom(let message):
+                return message
             }
         }
     }

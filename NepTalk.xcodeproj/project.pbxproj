@@ -34,6 +34,8 @@
 		39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B94A0A276F6835005A7CA9 /* StorageManager.swift */; };
 		39C6545A276BC41B00C63850 /* ChatViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39C65459276BC41B00C63850 /* ChatViewController.swift */; };
 		39E294022754200900D57C42 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39E294012754200900D57C42 /* Extension.swift */; };
+		39FCD897279429B4009C42B4 /* FirebaseAuthManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCD896279429B4009C42B4 /* FirebaseAuthManager.swift */; };
+		39FCD89927942CD4009C42B4 /* LoginViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39FCD89827942CD4009C42B4 /* LoginViewModel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -85,6 +87,8 @@
 		39B94A0A276F6835005A7CA9 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
 		39C65459276BC41B00C63850 /* ChatViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewController.swift; sourceTree = "<group>"; };
 		39E294012754200900D57C42 /* Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
+		39FCD896279429B4009C42B4 /* FirebaseAuthManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseAuthManager.swift; sourceTree = "<group>"; };
+		39FCD89827942CD4009C42B4 /* LoginViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewModel.swift; sourceTree = "<group>"; };
 		3A736DB2007AE420934783F9 /* Pods-NepTalk.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk.debug.xcconfig"; path = "Target Support Files/Pods-NepTalk/Pods-NepTalk.debug.xcconfig"; sourceTree = "<group>"; };
 		87D6BF1B346262A76D21B3AF /* Pods_NepTalk.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_NepTalk.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		AD27CC0007AF766714C3CB4E /* Pods-NepTalk.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NepTalk.release.xcconfig"; path = "Target Support Files/Pods-NepTalk/Pods-NepTalk.release.xcconfig"; sourceTree = "<group>"; };
@@ -128,6 +132,7 @@
 			isa = PBXGroup;
 			children = (
 				390B5297278B517D002EE4BD /* ProfileViewModel.swift */,
+				39FCD89827942CD4009C42B4 /* LoginViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -137,6 +142,7 @@
 			children = (
 				390E79B3275928BC00B31FAE /* DatabaseManager.swift */,
 				39B94A0A276F6835005A7CA9 /* StorageManager.swift */,
+				39FCD896279429B4009C42B4 /* FirebaseAuthManager.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -459,6 +465,7 @@
 				390B5298278B517D002EE4BD /* ProfileViewModel.swift in Sources */,
 				39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */,
 				39E294022754200900D57C42 /* Extension.swift in Sources */,
+				39FCD897279429B4009C42B4 /* FirebaseAuthManager.swift in Sources */,
 				3963DE7C2784863500579821 /* NewConversationTableViewCell.swift in Sources */,
 				391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */,
 				39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */,
@@ -468,6 +475,7 @@
 				39B7893F27429258009D9B6E /* SceneDelegate.swift in Sources */,
 				3991E30A2779F5C9005C77F7 /* ConversationTableViewCell.swift in Sources */,
 				39C6545A276BC41B00C63850 /* ChatViewController.swift in Sources */,
+				39FCD89927942CD4009C42B4 /* LoginViewModel.swift in Sources */,
 				391FB2AC27808E8C0078A6A3 /* Message.swift in Sources */,
 				39B78977274299A0009D9B6E /* PhotoViewerViewController.swift in Sources */,
 				39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */,

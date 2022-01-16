@@ -6,7 +6,6 @@
 //
 
 import UIKit
-import Firebase
 import FBSDKLoginKit
 import GoogleSignIn
 import JGProgressHUD
@@ -14,6 +13,7 @@ import JGProgressHUD
 class LoginViewController: UIViewController {
     
     private let spinner = JGProgressHUD(style: .dark)
+    private let loginViewModel = LoginViewModel()
     
     private let scrollView: UIScrollView = {
         let scrollView: UIScrollView = UIScrollView()
@@ -96,6 +96,7 @@ class LoginViewController: UIViewController {
         emailField.delegate = self
         passwordField.delegate = self
         facebookLoginButton.delegate = self
+        loginViewModel.delegate = self
         
         // Add subsviews
         view.addSubview(scrollView)
@@ -134,42 +135,17 @@ class LoginViewController: UIViewController {
               let password = passwordField.text,
               !email.isEmpty,
               !password.isEmpty else {
-                  alertUserLoginError(message: "Please enter all information to log in")
+                  self.handleError(message: "Please enter all information to log in")
                   return
               }
         
         spinner.show(in: view)
-        
-        // Firebase login
-        Auth.auth().signIn(withEmail: email, password: password) { [weak self] authResult, error in
-            guard let self = self else { return }
-            DispatchQueue.main.async {
-                self.spinner.dismiss()
-            }
-            if authResult == nil, let error = error  {
-                self.alertUserLoginError(message: error.localizedDescription)
-                return
-            }
-            DatabaseManager.shared.getDataFor(path: authResult!.user.uid) { result in
-                switch result {
-                case .success(let data):
-                    if let userData = data as? [String: Any]  {
-                        let firstName = (userData["firstName"] as? String) ?? ""
-                        let lastName = (userData["lastName"] as? String) ?? ""
-                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
-                    }
-                case .failure(let error):
-                    print("Failed toread data with error \(error)")
-                }
-            }
-            (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
-        }
+        loginViewModel.signIn(withEmail: email, password: password)
     }
     
-    private func alertUserLoginError(title: String? = "Login Error", message: String? = "Something went wrong")  {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "Dismiss", style: .cancel, handler: nil))
-        present(alert, animated: true)
+    @objc private func googleSignInButtonTapped() {
+        spinner.show(in: view)
+        loginViewModel.googleSignIn(presentingView: self)
     }
 }
 
@@ -187,7 +163,7 @@ extension LoginViewController: UITextFieldDelegate {
     }
 }
 
-// MARK: - Facebook Login Handler
+// MARK: - Facebook Login Button Delegate
 extension LoginViewController: LoginButtonDelegate {
     func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
         // no operation
@@ -195,132 +171,33 @@ extension LoginViewController: LoginButtonDelegate {
     
     func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
         if let error = error {
-            alertUserLoginError(message: error.localizedDescription)
+            handleError(message: error.localizedDescription)
         } else {
             guard let token = result?.token?.tokenString else { return }
             let facebookRequest = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields": "email,first_name, last_name, picture.type(large)"], tokenString: token, version: nil, httpMethod: .get)
             facebookRequest.start { [weak self] _, fbResult, error in
-                guard let self = self else { return }
-                
-                guard let fbResult = fbResult as? [String: Any], error == nil else {
-                    self.alertUserLoginError(message: "Failed to retrieve data from facebook")
-                    return
-                }
-                
-                let credential = FacebookAuthProvider.credential(withAccessToken: token)
+                guard let self = self,
+                      let fbResult = fbResult as? [String: Any],
+                      error == nil else {
+                          self?.handleError(message: "Failed to retrieve data from facebook")
+                          return
+                      }
                 self.spinner.show(in: self.view)
-                Auth.auth().signIn(with: credential) { authResult, error in
-                    guard let authResult = authResult , error == nil else {
-                        self.alertUserLoginError(message: error?.localizedDescription)
-                        return
-                    }
-                    if let email = fbResult["email"] as? String {
-                        let firstName = (fbResult["first_name"] as? String) ?? ""
-                        let lastName = (fbResult["last_name"] as? String) ?? ""
-                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
-                        DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
-                            let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
-                            if !exists {
-                                DatabaseManager.shared.insertUser(with: appUser) { success in
-                                    if success, let picture = fbResult["picture"] as? [String: Any],
-                                       let data = picture["data"] as? [String: Any], let pictureUrl = data["url"] as? String {
-                                        
-                                        guard let url = URL(string: pictureUrl) else { return }
-                                        
-                                        print("Downloading data from facebook image")
-                                        
-                                        URLSession.shared.dataTask(with: url) { data, urlResponse, error in
-                                            guard let data = data else {
-                                                print("Failed to get data from facebook")
-                                                return
-                                            }
-                                            print("Got data from FB, uploading....")
-                                            let fileName = appUser.profilePictureFileName
-                                            StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
-                                                switch result {
-                                                case .success(let downloadUrl):
-                                                    UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
-                                                case .failure(let error):
-                                                    print("Storage manager error: \(error)")
-                                                }
-                                            }
-                                        }.resume()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self.spinner.dismiss()
-                    }
-                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
-                }
+                self.loginViewModel.facebookLogIn(token: token, data: fbResult)
             }
         }
     }
 }
 
-// MARK: - GoogleSignIn Handler
-extension LoginViewController {
+// MARK: - LoginView Delegate
+extension LoginViewController: LoginViewDelegate {
+    func didSignIn() {
+        spinner.dismiss()
+        (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
+    }
     
-    @objc private func googleSignInButtonTapped() {
-        
-        guard let clientID = FirebaseApp.app()?.options.clientID else {return}
-        // Create Google Sign In configuration object.
-        let config = GIDConfiguration(clientID: clientID)
-        
-        // Start the sign in flow!
-        GIDSignIn.sharedInstance.signIn(with: config, presenting: self) { [weak self] user, error in
-            guard let self = self else { return }
-            if let error = error {
-                self.alertUserLoginError(message: error.localizedDescription)
-            } else {
-                guard let authentication = user?.authentication, let idToken = authentication.idToken else {
-                    self.alertUserLoginError(message: "Failed to retrieve data from Google")
-                    return
-                }
-                
-                let credential = GoogleAuthProvider.credential(withIDToken: idToken, accessToken: authentication.accessToken)
-                self.spinner.show(in: self.view)
-                Auth.auth().signIn(with: credential) { authResult, error in
-                    guard let authResult = authResult , error == nil else {
-                        self.alertUserLoginError(message: error?.localizedDescription)
-                        return
-                    }
-                    if let userProfile = user?.profile {
-                        let email = userProfile.email
-                        let firstName = userProfile.givenName ?? ""
-                        let lastName = userProfile.familyName ?? ""
-                        UserDefaults.standard.set("\(firstName) \(lastName)", forKey: K.UserDefaultsKey.profileName)
-                        DatabaseManager.shared.userExists(with: authResult.user.uid) { exists in
-                            if !exists {
-                                let appUser = AppUser(uid: authResult.user.uid,firstName: firstName, lastName: lastName, email: email)
-                                DatabaseManager.shared.insertUser(with: appUser) { success in
-                                    if success && userProfile.hasImage {
-                                        let fileName = appUser.profilePictureFileName
-                                        guard let imageUrl = userProfile.imageURL(withDimension: 200) else { return }
-                                        URLSession.shared.dataTask(with: imageUrl) { data, _, _ in
-                                            guard let data = data else {return}
-                                            StorageManager.shared.uploadProfilePicture(with: data, fileName: fileName) { result in
-                                                switch result {
-                                                case .success(let downloadUrl):
-                                                    UserDefaults.standard.set(downloadUrl, forKey: K.UserDefaultsKey.profilePictureUrl)
-                                                case .failure(let error):
-                                                    print("Storage manager error: \(error)")
-                                                }
-                                            }
-                                        }.resume()
-                                    }
-                                }
-                            }
-                        }
-                    }
-                    DispatchQueue.main.async {
-                        self.spinner.dismiss()
-                    }
-                    (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "MainTabBarController")
-                }
-            }
-        }
+    func isError(error: Error) {
+        spinner.dismiss()
+        handleError(message: error.localizedDescription)
     }
 }
