@@ -13,6 +13,7 @@ import SDWebImage
 class ProfileViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
+    private let loginViewModel = LoginViewModel()
     
     var data = [ProfileViewModel]()
     
@@ -20,7 +21,7 @@ class ProfileViewController: UIViewController {
         super.viewDidLoad()
         tableView.register(ProfileTableViewCell.self, forCellReuseIdentifier: ProfileTableViewCell.identifier)
         data.append(ProfileViewModel(type: .info, title: "Name: \(UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) ?? "No Name")"))
-        data.append(ProfileViewModel(type: .info, title: "Email: \(DatabaseManager.shared.getCurrentUser()?.email ?? "No Email")"))
+        data.append(ProfileViewModel(type: .info, title: "Email: \(AuthManager.shared.getCurrentUser()?.email ?? "No Email")"))
         data.append(ProfileViewModel(type: .logout, title: "Log Out", handler: { [weak self] in
             guard let self = self else { return }
             let actionSheet = UIAlertController(title: "Do you want to log out ?", message: "", preferredStyle: .actionSheet)
@@ -28,12 +29,7 @@ class ProfileViewController: UIViewController {
                 UserDefaults.standard.set(nil, forKey: K.UserDefaultsKey.profileName)
                 UserDefaults.standard.set(nil, forKey: K.UserDefaultsKey.profilePictureUrl)
                 FBSDKLoginKit.LoginManager().logOut()
-                do {
-                    try Auth.auth().signOut()
-                } catch {
-                    print("Failed to log out")
-                    print(error)
-                }
+                self.loginViewModel.signOut()
                 (UIApplication.shared.connectedScenes.first?.delegate as? SceneDelegate)?.changeRootViewController(with: "LoginNavigationController")
             }))
             actionSheet.addAction(UIAlertAction(title: "Cancel", style: .cancel))
@@ -57,7 +53,7 @@ class ProfileViewController: UIViewController {
         imageView.layer.cornerRadius = imageView.width / 2
         headerView.addSubview(imageView)
         
-        let uid = DatabaseManager.shared.getCurrentUser()!.uid
+        let uid = AuthManager.shared.getCurrentUser()!.uid
         let path = "images/\(uid)_profile_pic.png"
         StorageManager.shared.downloadURL(for: path) { result in
             switch result {

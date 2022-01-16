@@ -18,7 +18,7 @@ class ChatViewController: MessagesViewController {
     private let conversationId: String?
     private var messages = [Message]()
     private var selfSender: Sender? {
-        guard let email = DatabaseManager.shared.getCurrentUser()?.email,
+        guard let email = AuthManager.shared.getCurrentUser()?.email,
               let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return nil
               }
@@ -175,7 +175,7 @@ class ChatViewController: MessagesViewController {
     
     private func createMessageId() -> String {
         let receiverUID = receipentUser.uid
-        let currentUserUID = DatabaseManager.shared.getCurrentUser()!.uid
+        let currentUserUID = AuthManager.shared.getCurrentUser()!.uid
         let dateString = Date.formatToString(using: .en_US_POSIX, from: Date())
         let newIdentifier = "\(receiverUID)_\(currentUserUID)_\(dateString)"
         return newIdentifier
@@ -229,7 +229,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
             if let senderPhotoUrl = senderPhotoUrl {
                 avatarView.sd_setImage(with: senderPhotoUrl)
             } else {
-                let uid = DatabaseManager.shared.getCurrentUser()!.uid
+                let uid = AuthManager.shared.getCurrentUser()!.uid
                 let path = "images/\(uid)_profile_pic.png"
                 StorageManager.shared.downloadURL(for: path) { [weak self] result in
                     switch result {

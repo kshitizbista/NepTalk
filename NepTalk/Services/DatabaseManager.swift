@@ -20,13 +20,16 @@ final class DatabaseManager {
     
     public enum DatabaseError: Error {
         case failedToFetch,
-             failedToWrite
+             failedToWrite,
+            custom(String)
         public var localizedDescription: String {
             switch self {
             case .failedToFetch:
                 return "Failed to fetch data from firebase"
             case .failedToWrite:
                 return "Failed to write data to firebase"
+            case .custom(let message):
+                return message
             }
         }
     }
@@ -34,10 +37,6 @@ final class DatabaseManager {
 
 // MARK: - Account Management
 extension DatabaseManager {
-    
-    public func getCurrentUser() -> User? {
-        return Auth.auth().currentUser
-    }
     
     public func userExists(with uid: String, completion: @escaping ((Bool) -> Void)) {
         database.child(uid)
@@ -120,8 +119,8 @@ extension DatabaseManager {
     
     /// Create a new conversation with target user email
     public func createConversation(with receiver: UserResult, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
-        guard let senderEmail = getCurrentUser()?.email,
-              let senderUID = getCurrentUser()?.uid,
+        guard let senderEmail = AuthManager.shared.getCurrentUser()?.email,
+              let senderUID = AuthManager.shared.getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
@@ -129,30 +128,6 @@ extension DatabaseManager {
         let receiverRef = database.child("\(receiver.uid)/conversations")
         let messageDate = message.sentDate
         let dateString = Date.formatToString(using: .en_US_POSIX, from: messageDate)
-        
-        var newMessage = ""
-        switch message.kind {
-        case .text(let textMessage):
-            newMessage = textMessage
-        case .attributedText(_):
-            break
-        case .photo(_):
-            break
-        case .video(_):
-            break
-        case .location(_):
-            break
-        case .emoji(_):
-            break
-        case .audio(_):
-            break
-        case .contact(_):
-            break
-        case .linkPreview(_):
-            break
-        case .custom(_):
-            break
-        }
         
         let conversationId = "conversation_\(message.messageId)"
         let senderConversation: [String: Any] = [
@@ -162,7 +137,7 @@ extension DatabaseManager {
             "receiver_name": receiver.name,
             "latest_message": [
                 "date": dateString,
-                "message": newMessage,
+                "message": message.string,
                 "is_read": false
             ]
         ]
@@ -174,7 +149,7 @@ extension DatabaseManager {
             "receiver_name": senderName,
             "latest_message": [
                 "date": dateString,
-                "message": newMessage,
+                "message": message.string,
                 "is_read": false
             ]
         ]
@@ -213,7 +188,7 @@ extension DatabaseManager {
     
     /// Fetch and return all convsersation for the user with passed in email
     public func getAllConversations(completion: @escaping (Result<[Conversation], Error>) -> Void) {
-        guard let uid = getCurrentUser()?.uid else {
+        guard let uid = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
         database.child("\(uid)/conversations").observe(.value) { snapshot in
@@ -306,8 +281,8 @@ extension DatabaseManager {
         // update sender latest message
         // update recepient latest message
         
-        guard let senderEmail = getCurrentUser()?.email,
-              let senderUID = getCurrentUser()?.uid,
+        guard let senderEmail = AuthManager.shared.getCurrentUser()?.email,
+              let senderUID = AuthManager.shared.getCurrentUser()?.uid,
               let senderName = UserDefaults.standard.value(forKey: K.UserDefaultsKey.profileName) as? String else {
                   return
               }
@@ -315,35 +290,10 @@ extension DatabaseManager {
         let messageDate = message.sentDate
         let dateString = Date.formatToString(using: .en_US_POSIX, from: messageDate)
         
-        var newMessage = ""
-        switch message.kind {
-        case .text(let textMessage):
-            newMessage = textMessage
-        case .attributedText(_):
-            break
-        case .photo(let mediaItem):
-            newMessage = mediaItem.url!.absoluteString
-        case .video(let mediaItem):
-            newMessage = mediaItem.url!.absoluteString
-        case .location(let locationItem):
-            let location = locationItem.location
-            newMessage = "\(location.coordinate.longitude),\(location.coordinate.latitude)"
-        case .emoji(_):
-            break
-        case .audio(_):
-            break
-        case .contact(_):
-            break
-        case .linkPreview(_):
-            break
-        case .custom(_):
-            break
-        }
-        
         let messageEntry: [String: Any] = [
             "id": message.messageId,
             "type": message.kind.string,
-            "content": newMessage,
+            "content": message.string,
             "date": dateString,
             "sender_email": senderEmail,
             "sender_name": senderName,
@@ -352,7 +302,7 @@ extension DatabaseManager {
         
         let latestMessage: [String: Any] = [
             "date": dateString,
-            "message": newMessage,
+            "message": message.string,
             "is_read": false
         ]
         
@@ -450,34 +400,10 @@ extension DatabaseManager {
     private func addConversation(conversationId: String, senderEmail: String, senderName: String, message: Message, completion: @escaping (Result<String, DatabaseError>) -> Void) {
         let dateString = Date.formatToString(using: .en_US_POSIX, from: message.sentDate)
         
-        var newMessage = ""
-        switch message.kind {
-        case .text(let textMessage):
-            newMessage = textMessage
-        case .attributedText(_):
-            break
-        case .photo(_):
-            break
-        case .video(_):
-            break
-        case .location(_):
-            break
-        case .emoji(_):
-            break
-        case .audio(_):
-            break
-        case .contact(_):
-            break
-        case .linkPreview(_):
-            break
-        case .custom(_):
-            break
-        }
-        
         let collectionMessage: [String: Any] = [
             "id": message.messageId,
             "type": message.kind.string,
-            "content": newMessage,
+            "content": message.string,
             "date": dateString,
             "sender_email": senderEmail,
             "sender_name": senderName,
@@ -498,7 +424,7 @@ extension DatabaseManager {
     }
     
     public func deleteConversation(conversationId: String, completion: @escaping (Bool) -> Void) {
-        guard let uid = getCurrentUser()?.uid else {
+        guard let uid = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
         let ref = database.child("\(uid)/conversations")
@@ -520,7 +446,7 @@ extension DatabaseManager {
     }
     
     public func conversationExists(with receiverUID: String, completion: @escaping (Result<String, Error>) -> Void) {
-        guard let senderUID = getCurrentUser()?.uid else {
+        guard let senderUID = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
         database.child("\(receiverUID)/conversations").observeSingleEvent(of: .value) { snapshot in
