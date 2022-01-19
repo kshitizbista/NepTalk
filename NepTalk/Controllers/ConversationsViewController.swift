@@ -72,21 +72,7 @@ class ConversationsViewController: UIViewController {
     
     @objc private func didTapComposeButton() {
         let vc = NewConversationViewController()
-        vc.completion = { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            if let targetConversation = self.conversations.first(where: {$0.receiverUID == result.uid}) {
-                let vc = ChatViewController(with: result, id: targetConversation.id)
-                vc.isNewConversation = false
-                vc.title = targetConversation.receiverName
-                vc.navigationItem.largeTitleDisplayMode = .never
-                self.navigationController?.pushViewController(vc, animated: false)
-            } else {
-                self.createNewConversation(userResult: result)
-            }
-            
-        }
+        vc.delegate = self
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
@@ -146,7 +132,7 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
             let conversationId = conversations[indexPath.row].id
             DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
                 if success {
-                   print("Conversation deleted")
+                    print("Conversation deleted")
                 }
             }
             //            Dont need to manually delete because we are listening to the changes in startListeningForConversations func
@@ -168,5 +154,19 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         vc.title = model.receiverName
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
+    }
+}
+
+extension ConversationsViewController: NewConversationViewControllerDelegate {
+    func didSelectUser(user: UserResult) {
+        if let targetConversation = self.conversations.first(where: {$0.receiverUID == user.uid}) {
+            let vc = ChatViewController(with: user, id: targetConversation.id)
+            vc.isNewConversation = false
+            vc.title = targetConversation.receiverName
+            vc.navigationItem.largeTitleDisplayMode = .never
+            self.navigationController?.pushViewController(vc, animated: false)
+        } else {
+            self.createNewConversation(userResult: user)
+        }
     }
 }
