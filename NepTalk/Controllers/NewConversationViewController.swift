@@ -7,16 +7,15 @@
 
 import UIKit
 import JGProgressHUD
-
-protocol NewConversationViewControllerDelegate: AnyObject {
-    func didSelectUser(user: UserResult) -> Void
-}
+import Combine
 
 class NewConversationViewController: UIViewController {
     
-    weak var delegate: NewConversationViewControllerDelegate?
+    let selectUser = PassthroughSubject<UserResult, Never>()
     private let spinner = JGProgressHUD(style: .dark)
     private let newConversationViewModel = NewConversationViewModel()
+    private var cancellable: AnyCancellable?
+    private let search = PassthroughSubject<String, Never>()
     
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
@@ -51,7 +50,23 @@ class NewConversationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(dismissSelf))
         searchBar.delegate = self
         searchBar.becomeFirstResponder()
-        newConversationViewModel.delegate = self
+        newConversationViewModel.bind(search.eraseToAnyPublisher())
+        cancellable = newConversationViewModel
+            .$searchResult
+            .dropFirst()
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] searchResult in
+                guard let self = self else { return }
+                self.spinner.dismiss()
+                if searchResult.isEmpty {
+                    self.noResultLabel.isHidden = false
+                    self.tableView.isHidden = true
+                } else {
+                    self.noResultLabel.isHidden = true
+                    self.tableView.isHidden = false
+                    self.tableView.reloadData()
+                }
+            }
     }
     
     override func viewDidLayoutSubviews() {
@@ -81,7 +96,7 @@ extension NewConversationViewController: UITableViewDataSource, UITableViewDeleg
         tableView.deselectRow(at: indexPath, animated: true)
         let selectedUser = newConversationViewModel.searchResult[indexPath.row]
         dismiss(animated: true) { [weak self] in
-            self?.delegate?.didSelectUser(user: selectedUser)
+            self?.selectUser.send(selectedUser)
         }
     }
     
@@ -96,24 +111,7 @@ extension NewConversationViewController: UISearchBarDelegate {
             return
         }
         searchBar.resignFirstResponder()
-        newConversationViewModel.removeAllSearchResult()
         spinner.show(in: view)
-        newConversationViewModel.searchUsers(query: text)
-    }
-}
-
-extension NewConversationViewController: NewConversationViewDelegate {
-    func shouldUpdateUI(searchResult: [UserResult]) {
-        DispatchQueue.main.async {
-            self.spinner.dismiss()
-            if searchResult.isEmpty {
-                self.noResultLabel.isHidden = false
-                self.tableView.isHidden = true
-            } else {
-                self.noResultLabel.isHidden = true
-                self.tableView.isHidden = false
-                self.tableView.reloadData()
-            }
-        }
+        search.send(text)
     }
 }

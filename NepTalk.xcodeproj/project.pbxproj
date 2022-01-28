@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		2C5A63D05120A3553083327B /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87D6BF1B346262A76D21B3AF /* Pods_NepTalk.framework */; };
+		39086493279843F0004424DF /* ConversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39086492279843F0004424DF /* ConversationViewModel.swift */; };
 		390A90342796062D002398C9 /* NewConversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390A90332796062D002398C9 /* NewConversationViewModel.swift */; };
 		390B5295278B0F8E002EE4BD /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */; };
 		390B5298278B517D002EE4BD /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B5297278B517D002EE4BD /* ProfileViewModel.swift */; };
@@ -56,6 +57,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		39086492279843F0004424DF /* ConversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewModel.swift; sourceTree = "<group>"; };
 		390A90332796062D002398C9 /* NewConversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewModel.swift; sourceTree = "<group>"; };
 		390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
 		390B5297278B517D002EE4BD /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
@@ -134,6 +136,7 @@
 				390B5297278B517D002EE4BD /* ProfileViewModel.swift */,
 				39FCD89827942CD4009C42B4 /* LoginViewModel.swift */,
 				390A90332796062D002398C9 /* NewConversationViewModel.swift */,
+				39086492279843F0004424DF /* ConversationViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -460,6 +463,7 @@
 				39B7897527429962009D9B6E /* RegisterViewController.swift in Sources */,
 				390B529A278B552C002EE4BD /* ProfileTableViewCell.swift in Sources */,
 				390B5295278B0F8E002EE4BD /* LocationPickerViewController.swift in Sources */,
+				39086493279843F0004424DF /* ConversationViewModel.swift in Sources */,
 				39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */,
 				39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */,
 				390B5298278B517D002EE4BD /* ProfileViewModel.swift in Sources */,
@@ -589,6 +593,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = "";
 			};
 			name = Debug;
 		};
@@ -643,6 +648,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;

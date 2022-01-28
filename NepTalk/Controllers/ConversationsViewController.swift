@@ -7,12 +7,13 @@
 
 import UIKit
 import JGProgressHUD
+import Combine
 
 class ConversationsViewController: UIViewController {
     
     private var conversations = [Conversation]()
-    
     private let spinner = JGProgressHUD(style: .dark)
+    private var cancellable: AnyCancellable?
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -72,7 +73,20 @@ class ConversationsViewController: UIViewController {
     
     @objc private func didTapComposeButton() {
         let vc = NewConversationViewController()
-        vc.delegate = self
+        cancellable?.cancel()
+        cancellable = vc
+            .selectUser
+            .sink { [unowned self] selectedUser in
+                if let targetConversation = self.conversations.first(where: {$0.receiverUID == selectedUser.uid}) {
+                    let vc = ChatViewController(with: selectedUser, id: targetConversation.id)
+                    vc.isNewConversation = false
+                    vc.title = targetConversation.receiverName
+                    vc.navigationItem.largeTitleDisplayMode = .never
+                    self.navigationController?.pushViewController(vc, animated: false)
+                } else {
+                    self.createNewConversation(userResult: selectedUser)
+                }
+            }
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
@@ -97,6 +111,10 @@ class ConversationsViewController: UIViewController {
                 self.navigationController?.pushViewController(vc, animated: false)
             }
         }
+    }
+    
+    deinit {
+        print("deinit")
     }
 }
 
@@ -154,19 +172,5 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
         vc.title = model.receiverName
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
-    }
-}
-
-extension ConversationsViewController: NewConversationViewControllerDelegate {
-    func didSelectUser(user: UserResult) {
-        if let targetConversation = self.conversations.first(where: {$0.receiverUID == user.uid}) {
-            let vc = ChatViewController(with: user, id: targetConversation.id)
-            vc.isNewConversation = false
-            vc.title = targetConversation.receiverName
-            vc.navigationItem.largeTitleDisplayMode = .never
-            self.navigationController?.pushViewController(vc, animated: false)
-        } else {
-            self.createNewConversation(userResult: user)
-        }
     }
 }
