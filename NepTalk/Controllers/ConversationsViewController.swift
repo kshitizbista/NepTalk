@@ -6,14 +6,15 @@
 //
 
 import UIKit
-import JGProgressHUD
 import Combine
 
 class ConversationsViewController: UIViewController {
     
     private var conversations = [Conversation]()
-    private let spinner = JGProgressHUD(style: .dark)
-    private var cancellable: AnyCancellable?
+    private let viewModal = ConversationViewModal()
+    private var conversationSubscription: AnyCancellable?
+    private var newConversationSubscription = Set<AnyCancellable>()
+    private var deleteConversationSubscription: AnyCancellable?
     
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -48,73 +49,73 @@ class ConversationsViewController: UIViewController {
         noConversationLabel.frame = CGRect(x: 10, y: (view.height-100)/2, width: view.width - 20, height: 100)
     }
     
-    private func startListeningForConversations() {
-        DatabaseManager.shared.getAllConversations{ [weak self] result in
-            switch result {
-            case .success(let conversations):
-                guard !conversations.isEmpty else {
-                    self?.tableView.isHidden = true
-                    self?.noConversationLabel.isHidden = false
-                    return
-                }
-                self?.tableView.isHidden = false
-                self?.noConversationLabel.isHidden = true
-                self?.conversations = conversations
-                DispatchQueue.main.async {
-                    self?.tableView.reloadData()
-                }
-            case .failure(let error):
-                self?.tableView.isHidden = true
-                self?.noConversationLabel.isHidden = false
-                print("failed to get convos: \(error)")
-            }
-        }
-    }
-    
     @objc private func didTapComposeButton() {
         let vc = NewConversationViewController()
-        cancellable?.cancel()
-        cancellable = vc
+        newConversationSubscription.removeAll()
+        vc
             .selectUser
             .sink { [unowned self] selectedUser in
-                if let targetConversation = self.conversations.first(where: {$0.receiverUID == selectedUser.uid}) {
-                    let vc = ChatViewController(with: selectedUser, id: targetConversation.id)
-                    vc.isNewConversation = false
-                    vc.title = targetConversation.receiverName
-                    vc.navigationItem.largeTitleDisplayMode = .never
-                    self.navigationController?.pushViewController(vc, animated: false)
-                } else {
-                    self.createNewConversation(userResult: selectedUser)
-                }
+                self.goToConversation(selectedUser)
             }
+            .store(in: &newConversationSubscription)
         let nav = UINavigationController(rootViewController: vc)
         present(nav, animated: true)
     }
     
-    private func createNewConversation(userResult: UserResult) {
-        DatabaseManager.shared.conversationExists(with: userResult.uid) { [weak self] result in
-            guard let self = self else {
-                return
-            }
-            switch result {
-            case .success(let conversationId):
-                let vc = ChatViewController(with: userResult, id: conversationId)
-                vc.isNewConversation = false
-                vc.title = userResult.name
-                vc.navigationItem.largeTitleDisplayMode = .never
-                self.navigationController?.pushViewController(vc, animated: false)
-            case .failure(_):
-                let vc = ChatViewController(with: userResult, id: nil)
-                vc.isNewConversation = true
-                vc.title = userResult.name
-                vc.navigationItem.largeTitleDisplayMode = .never
-                self.navigationController?.pushViewController(vc, animated: false)
-            }
-        }
+    private func startListeningForConversations() {
+        conversationSubscription = viewModal
+            .conversationsPublisher()
+            .receive(on: DispatchQueue.main)
+            .sink(receiveCompletion: { [weak self] completion in
+                switch completion {
+                case .finished: break
+                case .failure(_):
+                    self?.tableView.isHidden = true
+                    self?.noConversationLabel.isHidden = false
+                }
+            }, receiveValue: { [weak self] conversations in
+                if !conversations.isEmpty {
+                    self?.tableView.isHidden = false
+                    self?.noConversationLabel.isHidden = true
+                    self?.conversations = conversations
+                    self?.tableView.reloadData()
+                }
+                else {
+                    self?.tableView.isHidden = true
+                    self?.noConversationLabel.isHidden = false
+                }
+            })
     }
     
-    deinit {
-        print("deinit")
+    private func goToConversation(_ selectedUser: UserResult) {
+        if let targetConversation = conversations.first(where: {$0.receiverUID == selectedUser.uid}) {
+            let vc = ChatViewController(with: selectedUser, id: targetConversation.id)
+            vc.isNewConversation = false
+            vc.title = targetConversation.receiverName
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: false)
+        } else {
+            viewModal
+                .conversationIDPublisher(userResult: selectedUser)
+                .sink { [unowned self] completion in
+                    switch completion {
+                    case .finished: break
+                    case .failure(_):
+                        let vc = ChatViewController(with: selectedUser, id: nil)
+                        vc.isNewConversation = true
+                        vc.title = selectedUser.name
+                        vc.navigationItem.largeTitleDisplayMode = .never
+                        self.navigationController?.pushViewController(vc, animated: false)
+                    }
+                } receiveValue: { conversationId in
+                    let vc = ChatViewController(with: selectedUser, id: conversationId)
+                    vc.isNewConversation = false
+                    vc.title = selectedUser.name
+                    vc.navigationItem.largeTitleDisplayMode = .never
+                    self.navigationController?.pushViewController(vc, animated: false)
+                }
+                .store(in: &newConversationSubscription)
+        }
     }
 }
 
@@ -148,11 +149,13 @@ extension ConversationsViewController: UITableViewDelegate, UITableViewDataSourc
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
             let conversationId = conversations[indexPath.row].id
-            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in
-                if success {
+            deleteConversationSubscription?.cancel()
+            deleteConversationSubscription = viewModal
+                .deleteConversationPublisher(conversationId: conversationId)
+                .first()
+                .sink { success in
                     print("Conversation deleted")
                 }
-            }
             //            Dont need to manually delete because we are listening to the changes in startListeningForConversations func
             //            tableView.beginUpdates()
             //            DatabaseManager.shared.deleteConversation(conversationId: conversationId) { [weak self] success in

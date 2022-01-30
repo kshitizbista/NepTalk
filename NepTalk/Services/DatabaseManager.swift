@@ -437,7 +437,6 @@ extension DatabaseManager {
                             completion(false)
                             return
                         }
-                        print("deleted conversation")
                         completion(true)
                     }
                 }
