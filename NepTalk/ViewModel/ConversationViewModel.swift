@@ -49,4 +49,8 @@ final class ConversationViewModal {
         }
         return conversationDeletionSubject.eraseToAnyPublisher()
     }
+    
+    func detachConverstionsListener() {
+        DatabaseManager.shared.removeConverstionsListener()
+    }
 }

@@ -117,6 +117,10 @@ class ConversationsViewController: UIViewController {
                 .store(in: &newConversationSubscription)
         }
     }
+    
+    deinit {
+        viewModal.detachConverstionsListener()
+    }
 }
 
 extension ConversationsViewController: UITableViewDelegate, UITableViewDataSource {

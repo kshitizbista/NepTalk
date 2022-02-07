@@ -26,6 +26,7 @@ class ChatViewController: MessagesViewController {
     }
     private var senderPhotoUrl: URL?
     private var receiverPhotoUrl: URL?
+    private var isFirstLoad = true
     
     init(with: UserResult, id: String?) {
         receipentUser = with
@@ -51,7 +52,7 @@ class ChatViewController: MessagesViewController {
         super.viewDidAppear(animated)
         messageInputBar.inputTextView.becomeFirstResponder()
         if let conversationId = conversationId {
-            listernForMessages(id: conversationId, shouldScrollToBottom: false)
+            listernForMessages(id: conversationId)
         }
     }
     
@@ -153,18 +154,24 @@ class ChatViewController: MessagesViewController {
         present(actionSheet, animated: true)
     }
     
-    private func listernForMessages(id: String, shouldScrollToBottom: Bool) {
+    private func listernForMessages(id: String) {
         DatabaseManager.shared.getAllMessagesForConversation(with: id) { [weak self] result in
+            print("hello")
             switch result {
             case .success(let messages):
-                guard !messages.isEmpty else {
-                    return
-                }
-                self?.messages = messages
+                guard let self = self,
+                      !messages.isEmpty else {
+                          return
+                      }
+                self.messages = messages
                 DispatchQueue.main.async {
-                    self?.messagesCollectionView.reloadDataAndKeepOffset()
-                    if shouldScrollToBottom {
-                        self?.messagesCollectionView.scrollToLastItem()
+                    if self.isFirstLoad {
+                        self.isFirstLoad = false
+                        self.messagesCollectionView.reloadData()
+                        self.messagesCollectionView.scrollToItem(at: IndexPath(row: 0, section: self.messages.count - 1), at: .top, animated: false)
+                    } else {
+                        self.isFirstLoad = false
+                        self.messagesCollectionView.reloadDataAndKeepOffset()
                     }
                 }
             case.failure(let error):
@@ -179,6 +186,11 @@ class ChatViewController: MessagesViewController {
         let dateString = Date.formatToString(using: .en_US_POSIX, from: Date())
         let newIdentifier = "\(receiverUID)_\(currentUserUID)_\(dateString)"
         return newIdentifier
+    }
+    
+    
+    deinit {
+        DatabaseManager.shared.removeMessagesListener()
     }
     
 }
@@ -280,7 +292,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
                 case .success(let conversationId):
                     print("message sent")
                     self?.isNewConversation = false
-                    self?.listernForMessages(id: conversationId, shouldScrollToBottom: true)
+                    self?.isFirstLoad = true
+                    self?.listernForMessages(id: conversationId)
                     self?.messageInputBar.inputTextView.text = nil
                 case .failure(let error):
                     print("failed to send message \(error)")
@@ -332,7 +345,6 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
                                 print("failed to send")
                             }
                         }
-                        
                     }
                 case .failure(let error):
                     print("message photo upload error: \(error)")

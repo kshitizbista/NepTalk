@@ -15,13 +15,17 @@ final class DatabaseManager {
     
     static let shared = DatabaseManager()
     private let database = Database.database().reference()
+    private var messagesRef: DatabaseReference?
+    private var conversationsRef: DatabaseReference?
+    private var messagesHandle: DatabaseHandle?
+    private var conversationsHandle: DatabaseHandle?
     
     private init () {}
     
     public enum DatabaseError: Error {
         case failedToFetch,
              failedToWrite,
-            custom(String)
+             custom(String)
         public var localizedDescription: String {
             switch self {
             case .failedToFetch:
@@ -191,7 +195,8 @@ extension DatabaseManager {
         guard let uid = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
-        database.child("\(uid)/conversations").observe(.value) { snapshot in
+        conversationsRef = database.child("\(uid)/conversations")
+        conversationsHandle =  conversationsRef!.observe(.value) { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
@@ -216,7 +221,8 @@ extension DatabaseManager {
     
     /// Get all messages for a given conversation
     public func getAllMessagesForConversation(with id: String, completion: @escaping (Result<[Message], Error>) -> Void) {
-        database.child("\(id)/messages").observe(.value) { snapshot in
+        messagesRef = database.child("\(id)/messages")
+        messagesHandle = messagesRef!.observe(.value) { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
@@ -463,6 +469,18 @@ extension DatabaseManager {
             } else {
                 completion(.failure(DatabaseError.failedToFetch))
             }
+        }
+    }
+    
+    func removeMessagesListener() {
+        if let messagesRef = messagesRef, let messagesHandle = messagesHandle {
+            messagesRef.removeObserver(withHandle: messagesHandle)
+        }
+    }
+    
+    func removeConverstionsListener() {
+        if let conversationsRef = conversationsRef, let conversationsHandle = conversationsHandle {
+            conversationsRef.removeObserver(withHandle: conversationsHandle)
         }
     }
 }
