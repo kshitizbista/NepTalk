@@ -156,7 +156,6 @@ class ChatViewController: MessagesViewController {
     
     private func listernForMessages(id: String) {
         DatabaseManager.shared.getAllMessagesForConversation(with: id) { [weak self] result in
-            print("hello")
             switch result {
             case .success(let messages):
                 guard let self = self,
@@ -188,11 +187,9 @@ class ChatViewController: MessagesViewController {
         return newIdentifier
     }
     
-    
     deinit {
         DatabaseManager.shared.removeMessagesListener()
     }
-    
 }
 
 extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, MessagesDisplayDelegate {

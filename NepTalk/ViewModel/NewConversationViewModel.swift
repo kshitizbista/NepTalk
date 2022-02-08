@@ -11,28 +11,23 @@ import Combine
 final class NewConversationViewModel {
     
     @Published private(set) var searchResult = [UserResult]()
-    private var users = [UserResult]()
-    private var cancellable: AnyCancellable?
+    private var users = [UserResult]()    
     
-    func bind(_ query: AnyPublisher<String, Never>) {
-        cancellable = query
-            .sink { [weak self] searchQuery in
-            guard let self = self else { return }
-            var hasFetched = false
-            if hasFetched {
-                // if it does: filter
-                self.filterUsers(with: searchQuery)
-            } else {
-                // if not, fetch then filter
-                DatabaseManager.shared.getAllUsers { result in
-                    switch result {
-                    case .success(let userCollection):
-                        hasFetched = true
-                        self.users = userCollection
-                        self.filterUsers(with: searchQuery)
-                    case .failure(let error):
-                        print("Failed to get users: \(error)")
-                    }
+    func search(_ query: String) {
+        var hasFetched = false
+        if hasFetched {
+            // if it does: filter
+            self.filterUsers(with: query)
+        } else {
+            // if not, fetch then filter
+            DatabaseManager.shared.getAllUsers { result in
+                switch result {
+                case .success(let userCollection):
+                    hasFetched = true
+                    self.users = userCollection
+                    self.filterUsers(with: query)
+                case .failure(let error):
+                    print(error)
                 }
             }
         }

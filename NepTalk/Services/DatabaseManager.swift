@@ -25,6 +25,7 @@ final class DatabaseManager {
     public enum DatabaseError: Error {
         case failedToFetch,
              failedToWrite,
+             noDataFound,
              custom(String)
         public var localizedDescription: String {
             switch self {
@@ -32,6 +33,8 @@ final class DatabaseManager {
                 return "Failed to fetch data from firebase"
             case .failedToWrite:
                 return "Failed to write data to firebase"
+            case .noDataFound:
+                return "No data found"
             case .custom(let message):
                 return message
             }
@@ -100,7 +103,7 @@ extension DatabaseManager {
     public func getAllUsers(completion: @escaping (Result<[UserResult], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.failure(DatabaseError.noDataFound))
                 return
             }
             
@@ -196,9 +199,9 @@ extension DatabaseManager {
             return
         }
         conversationsRef = database.child("\(uid)/conversations")
-        conversationsHandle =  conversationsRef!.observe(.value) { snapshot in
+        conversationsRef!.observe(.value) {snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.success([]))
                 return
             }
             let conversations: [Conversation] = value.compactMap { dictionary in
@@ -216,6 +219,8 @@ extension DatabaseManager {
                 return Conversation(id: conversationId, receiverName: receiverName, receiverEmail: receiverEmail, receiverUID: receiverUID, latestMessage: latestMessageObject)
             }
             completion(.success(conversations))
+        } withCancel: { error in
+            completion(.failure(error))
         }
     }
     
@@ -396,7 +401,7 @@ extension DatabaseManager {
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
         database.child(path).observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.failure(DatabaseError.noDataFound))
                 return
             }
             completion(.success(value))
@@ -450,25 +455,24 @@ extension DatabaseManager {
         }
     }
     
-    public func conversationExists(with receiverUID: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func conversationExists(with receiverUID: String, completion: @escaping (Result<String?, Error>) -> Void) {
         guard let senderUID = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
-        database.child("\(receiverUID)/conversations").observeSingleEvent(of: .value) { snapshot in
+        database.child("\(receiverUID)/conversations").observeSingleEvent(of: .value, with: { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.success(nil))
                 return
             }
-            if let conversation = value.first(where: {
+            let conversation = value.first(where: {
                 guard let selfSenderUID = $0["receiver_uid"] as? String else {
                     return false
                 }
                 return senderUID == selfSenderUID
-            }) {
-                completion(.success(conversation["id"] as! String))
-            } else {
-                completion(.failure(DatabaseError.failedToFetch))
-            }
+            })
+            completion(.success(conversation?["id"] as? String))
+        }) { error in
+            completion(.failure(error))
         }
     }
     

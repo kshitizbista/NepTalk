@@ -15,8 +15,6 @@ class NewConversationViewController: UIViewController {
     private let spinner = JGProgressHUD(style: .dark)
     private let newConversationViewModel = NewConversationViewModel()
     private var cancellable: AnyCancellable?
-    private let search = PassthroughSubject<String, Never>()
-    
     private let searchBar: UISearchBar = {
         let searchBar = UISearchBar()
         searchBar.placeholder = "Search for Users..."
@@ -50,7 +48,20 @@ class NewConversationViewController: UIViewController {
         navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Cancel", style: .done, target: self, action: #selector(dismissSelf))
         searchBar.delegate = self
         searchBar.becomeFirstResponder()
-        newConversationViewModel.bind(search.eraseToAnyPublisher())
+        subscribeToSearchResult()
+    }
+    
+    override func viewDidLayoutSubviews() {
+        super.viewDidLayoutSubviews()
+        tableView.frame = view.bounds
+        noResultLabel.frame = CGRect(x: view.width / 4 , y: (view.height - 200)/2, width: view.width/2, height: 200)
+    }
+    
+    @objc private func dismissSelf() {
+        dismiss(animated: true)
+    }
+    
+    private func subscribeToSearchResult() {
         cancellable = newConversationViewModel
             .$searchResult
             .dropFirst()
@@ -67,16 +78,6 @@ class NewConversationViewController: UIViewController {
                     self.tableView.reloadData()
                 }
             }
-    }
-    
-    override func viewDidLayoutSubviews() {
-        super.viewDidLayoutSubviews()
-        tableView.frame = view.bounds
-        noResultLabel.frame = CGRect(x: view.width / 4 , y: (view.height - 200)/2, width: view.width/2, height: 200)
-    }
-    
-    @objc private func dismissSelf() {
-        dismiss(animated: true)
     }
 }
 
@@ -112,6 +113,6 @@ extension NewConversationViewController: UISearchBarDelegate {
         }
         searchBar.resignFirstResponder()
         spinner.show(in: view)
-        search.send(text)
+        newConversationViewModel.search(text)
     }
 }

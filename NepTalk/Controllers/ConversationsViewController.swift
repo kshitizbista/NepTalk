@@ -66,12 +66,11 @@ class ConversationsViewController: UIViewController {
         conversationSubscription = viewModal
             .conversationsPublisher()
             .receive(on: DispatchQueue.main)
-            .sink(receiveCompletion: { [weak self] completion in
+            .sink(receiveCompletion: { completion in
                 switch completion {
                 case .finished: break
-                case .failure(_):
-                    self?.tableView.isHidden = true
-                    self?.noConversationLabel.isHidden = false
+                case .failure(let error):
+                    print(error)
                 }
             }, receiveValue: { [weak self] conversations in
                 if !conversations.isEmpty {
@@ -97,22 +96,26 @@ class ConversationsViewController: UIViewController {
         } else {
             viewModal
                 .conversationIDPublisher(userResult: selectedUser)
-                .sink { [unowned self] completion in
+                .sink { completion in
                     switch completion {
                     case .finished: break
-                    case .failure(_):
+                    case .failure(let error):
+                        print(error)
+                    }
+                } receiveValue: { [unowned self] conversationId in
+                    if let id = conversationId {
+                        let vc = ChatViewController(with: selectedUser, id: id)
+                        vc.isNewConversation = false
+                        vc.title = selectedUser.name
+                        vc.navigationItem.largeTitleDisplayMode = .never
+                        self.navigationController?.pushViewController(vc, animated: false)
+                    } else {
                         let vc = ChatViewController(with: selectedUser, id: nil)
                         vc.isNewConversation = true
                         vc.title = selectedUser.name
                         vc.navigationItem.largeTitleDisplayMode = .never
                         self.navigationController?.pushViewController(vc, animated: false)
                     }
-                } receiveValue: { conversationId in
-                    let vc = ChatViewController(with: selectedUser, id: conversationId)
-                    vc.isNewConversation = false
-                    vc.title = selectedUser.name
-                    vc.navigationItem.largeTitleDisplayMode = .never
-                    self.navigationController?.pushViewController(vc, animated: false)
                 }
                 .store(in: &newConversationSubscription)
         }

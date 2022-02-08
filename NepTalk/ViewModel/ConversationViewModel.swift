@@ -11,7 +11,7 @@ import Combine
 final class ConversationViewModal {
     
     private var conversationsSubject = PassthroughSubject<[Conversation], Error>()
-    private var conversationIDSubject = PassthroughSubject<String, Error>()
+    private var conversationIDSubject = PassthroughSubject<String?, Error>()
     private var conversationDeletionSubject = PassthroughSubject<Bool, Never>()
     
     func conversationsPublisher() -> AnyPublisher<[Conversation], Error> {
@@ -26,12 +26,11 @@ final class ConversationViewModal {
         return conversationsSubject.eraseToAnyPublisher()
     }
     
-    func conversationIDPublisher(userResult: UserResult) -> AnyPublisher<String, Error> {
+    func conversationIDPublisher(userResult: UserResult) -> AnyPublisher<String?, Error> {
         DatabaseManager.shared.conversationExists(with: userResult.uid) { [weak self] result in
             switch result {
             case .success(let conversationId):
                 self?.conversationIDSubject.send(conversationId)
-                
             case .failure(let error):
                 self?.conversationIDSubject.send(completion: .failure(error))
             }
