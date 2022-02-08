@@ -15,19 +15,26 @@ final class DatabaseManager {
     
     static let shared = DatabaseManager()
     private let database = Database.database().reference()
+    private var messagesRef: DatabaseReference?
+    private var conversationsRef: DatabaseReference?
+    private var messagesHandle: DatabaseHandle?
+    private var conversationsHandle: DatabaseHandle?
     
     private init () {}
     
     public enum DatabaseError: Error {
         case failedToFetch,
              failedToWrite,
-            custom(String)
+             noDataFound,
+             custom(String)
         public var localizedDescription: String {
             switch self {
             case .failedToFetch:
                 return "Failed to fetch data from firebase"
             case .failedToWrite:
                 return "Failed to write data to firebase"
+            case .noDataFound:
+                return "No data found"
             case .custom(let message):
                 return message
             }
@@ -96,7 +103,7 @@ extension DatabaseManager {
     public func getAllUsers(completion: @escaping (Result<[UserResult], Error>) -> Void) {
         database.child("users").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value as? [[String: String]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.failure(DatabaseError.noDataFound))
                 return
             }
             
@@ -191,9 +198,10 @@ extension DatabaseManager {
         guard let uid = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
-        database.child("\(uid)/conversations").observe(.value) { snapshot in
+        conversationsRef = database.child("\(uid)/conversations")
+        conversationsRef!.observe(.value) {snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.success([]))
                 return
             }
             let conversations: [Conversation] = value.compactMap { dictionary in
@@ -211,12 +219,15 @@ extension DatabaseManager {
                 return Conversation(id: conversationId, receiverName: receiverName, receiverEmail: receiverEmail, receiverUID: receiverUID, latestMessage: latestMessageObject)
             }
             completion(.success(conversations))
+        } withCancel: { error in
+            completion(.failure(error))
         }
     }
     
     /// Get all messages for a given conversation
     public func getAllMessagesForConversation(with id: String, completion: @escaping (Result<[Message], Error>) -> Void) {
-        database.child("\(id)/messages").observe(.value) { snapshot in
+        messagesRef = database.child("\(id)/messages")
+        messagesHandle = messagesRef!.observe(.value) { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
                 completion(.failure(DatabaseError.failedToFetch))
                 return
@@ -390,7 +401,7 @@ extension DatabaseManager {
     public func getDataFor(path: String, completion: @escaping (Result<Any, Error>) -> Void) {
         database.child(path).observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.failure(DatabaseError.noDataFound))
                 return
             }
             completion(.success(value))
@@ -437,7 +448,6 @@ extension DatabaseManager {
                             completion(false)
                             return
                         }
-                        print("deleted conversation")
                         completion(true)
                     }
                 }
@@ -445,25 +455,36 @@ extension DatabaseManager {
         }
     }
     
-    public func conversationExists(with receiverUID: String, completion: @escaping (Result<String, Error>) -> Void) {
+    public func conversationExists(with receiverUID: String, completion: @escaping (Result<String?, Error>) -> Void) {
         guard let senderUID = AuthManager.shared.getCurrentUser()?.uid else {
             return
         }
-        database.child("\(receiverUID)/conversations").observeSingleEvent(of: .value) { snapshot in
+        database.child("\(receiverUID)/conversations").observeSingleEvent(of: .value, with: { snapshot in
             guard let value = snapshot.value as? [[String: Any]] else {
-                completion(.failure(DatabaseError.failedToFetch))
+                completion(.success(nil))
                 return
             }
-            if let conversation = value.first(where: {
+            let conversation = value.first(where: {
                 guard let selfSenderUID = $0["receiver_uid"] as? String else {
                     return false
                 }
                 return senderUID == selfSenderUID
-            }) {
-                completion(.success(conversation["id"] as! String))
-            } else {
-                completion(.failure(DatabaseError.failedToFetch))
-            }
+            })
+            completion(.success(conversation?["id"] as? String))
+        }) { error in
+            completion(.failure(error))
+        }
+    }
+    
+    func removeMessagesListener() {
+        if let messagesRef = messagesRef, let messagesHandle = messagesHandle {
+            messagesRef.removeObserver(withHandle: messagesHandle)
+        }
+    }
+    
+    func removeConverstionsListener() {
+        if let conversationsRef = conversationsRef, let conversationsHandle = conversationsHandle {
+            conversationsRef.removeObserver(withHandle: conversationsHandle)
         }
     }
 }

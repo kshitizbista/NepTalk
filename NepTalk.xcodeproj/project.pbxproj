@@ -8,9 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		2C5A63D05120A3553083327B /* Pods_NepTalk.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 87D6BF1B346262A76D21B3AF /* Pods_NepTalk.framework */; };
+		39086493279843F0004424DF /* ConversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39086492279843F0004424DF /* ConversationViewModel.swift */; };
+		390A90342796062D002398C9 /* NewConversationViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390A90332796062D002398C9 /* NewConversationViewModel.swift */; };
 		390B5295278B0F8E002EE4BD /* LocationPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */; };
 		390B5298278B517D002EE4BD /* ProfileViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B5297278B517D002EE4BD /* ProfileViewModel.swift */; };
 		390B529A278B552C002EE4BD /* ProfileTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390B5299278B552C002EE4BD /* ProfileTableViewCell.swift */; };
+		390E3CB227A81E5B0016D7AD /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E3CB127A81E5B0016D7AD /* ChatViewModel.swift */; };
 		390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 390E79B3275928BC00B31FAE /* DatabaseManager.swift */; };
 		391FB2AC27808E8C0078A6A3 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AB27808E8C0078A6A3 /* Message.swift */; };
 		391FB2AE27808EA10078A6A3 /* Conversation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 391FB2AD27808EA10078A6A3 /* Conversation.swift */; };
@@ -28,7 +31,6 @@
 		39B789732742994C009D9B6E /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B789722742994C009D9B6E /* LoginViewController.swift */; };
 		39B7897527429962009D9B6E /* RegisterViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897427429962009D9B6E /* RegisterViewController.swift */; };
 		39B78977274299A0009D9B6E /* PhotoViewerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B78976274299A0009D9B6E /* PhotoViewerViewController.swift */; };
-		39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B78978274299B4009D9B6E /* VideoPlayerViewController.swift */; };
 		39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897A274299C8009D9B6E /* NewConversationViewController.swift */; };
 		39B7897D274299DC009D9B6E /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B7897C274299DC009D9B6E /* ProfileViewController.swift */; };
 		39B94A0B276F6835005A7CA9 /* StorageManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39B94A0A276F6835005A7CA9 /* StorageManager.swift */; };
@@ -56,9 +58,12 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		39086492279843F0004424DF /* ConversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConversationViewModel.swift; sourceTree = "<group>"; };
+		390A90332796062D002398C9 /* NewConversationViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewModel.swift; sourceTree = "<group>"; };
 		390B5294278B0F8E002EE4BD /* LocationPickerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocationPickerViewController.swift; sourceTree = "<group>"; };
 		390B5297278B517D002EE4BD /* ProfileViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewModel.swift; sourceTree = "<group>"; };
 		390B5299278B552C002EE4BD /* ProfileTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileTableViewCell.swift; sourceTree = "<group>"; };
+		390E3CB127A81E5B0016D7AD /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
 		390E79B3275928BC00B31FAE /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
 		390F5909278F2E6400E264D3 /* README.md */ = {isa = PBXFileReference; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		391FB2AB27808E8C0078A6A3 /* Message.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
@@ -81,7 +86,6 @@
 		39B789722742994C009D9B6E /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		39B7897427429962009D9B6E /* RegisterViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RegisterViewController.swift; sourceTree = "<group>"; };
 		39B78976274299A0009D9B6E /* PhotoViewerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PhotoViewerViewController.swift; sourceTree = "<group>"; };
-		39B78978274299B4009D9B6E /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		39B7897A274299C8009D9B6E /* NewConversationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationViewController.swift; sourceTree = "<group>"; };
 		39B7897C274299DC009D9B6E /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
 		39B94A0A276F6835005A7CA9 /* StorageManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StorageManager.swift; sourceTree = "<group>"; };
@@ -133,6 +137,9 @@
 			children = (
 				390B5297278B517D002EE4BD /* ProfileViewModel.swift */,
 				39FCD89827942CD4009C42B4 /* LoginViewModel.swift */,
+				390A90332796062D002398C9 /* NewConversationViewModel.swift */,
+				39086492279843F0004424DF /* ConversationViewModel.swift */,
+				390E3CB127A81E5B0016D7AD /* ChatViewModel.swift */,
 			);
 			path = ViewModel;
 			sourceTree = "<group>";
@@ -199,7 +206,6 @@
 				39B7894027429258009D9B6E /* ConversationsViewController.swift */,
 				39C9C7762757F58B00EBE0A9 /* Login */,
 				39B78976274299A0009D9B6E /* PhotoViewerViewController.swift */,
-				39B78978274299B4009D9B6E /* VideoPlayerViewController.swift */,
 				39B7897A274299C8009D9B6E /* NewConversationViewController.swift */,
 				39B7897C274299DC009D9B6E /* ProfileViewController.swift */,
 				39C65459276BC41B00C63850 /* ChatViewController.swift */,
@@ -455,17 +461,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				390E3CB227A81E5B0016D7AD /* ChatViewModel.swift in Sources */,
 				39B789732742994C009D9B6E /* LoginViewController.swift in Sources */,
 				390E79B4275928BC00B31FAE /* DatabaseManager.swift in Sources */,
 				39B7897527429962009D9B6E /* RegisterViewController.swift in Sources */,
 				390B529A278B552C002EE4BD /* ProfileTableViewCell.swift in Sources */,
 				390B5295278B0F8E002EE4BD /* LocationPickerViewController.swift in Sources */,
+				39086493279843F0004424DF /* ConversationViewModel.swift in Sources */,
 				39B7897B274299C8009D9B6E /* NewConversationViewController.swift in Sources */,
 				39B7894127429258009D9B6E /* ConversationsViewController.swift in Sources */,
 				390B5298278B517D002EE4BD /* ProfileViewModel.swift in Sources */,
-				39B78979274299B4009D9B6E /* VideoPlayerViewController.swift in Sources */,
 				39E294022754200900D57C42 /* Extension.swift in Sources */,
 				39FCD897279429B4009C42B4 /* AuthManager.swift in Sources */,
+				390A90342796062D002398C9 /* NewConversationViewModel.swift in Sources */,
 				3963DE7C2784863500579821 /* NewConversationTableViewCell.swift in Sources */,
 				391FB2B027808EB00078A6A3 /* AppUser.swift in Sources */,
 				39B7893D27429258009D9B6E /* AppDelegate.swift in Sources */,
@@ -589,6 +597,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = "";
 			};
 			name = Debug;
 		};
@@ -643,6 +652,7 @@
 				SDKROOT = iphoneos;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = "";
 				VALIDATE_PRODUCT = YES;
 			};
 			name = Release;
